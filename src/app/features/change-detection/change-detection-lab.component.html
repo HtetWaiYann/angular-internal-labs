@@ -1,0 +1,190 @@
+<div class="cd-lab">
+
+  <!-- ── Header ───────────────────────────────────────────────── -->
+  <header class="lab-header">
+    <div class="lab-title-row">
+      <span class="lab-icon">⚡</span>
+      <h1 class="lab-title">Change Detection Lab</h1>
+    </div>
+    <p class="lab-desc">
+      Click a button to trigger different change-detection scenarios.
+      Each strategy panel shows its <strong>render count</strong>, the
+      <strong>current value</strong> it knows about, and the
+      <strong>Angular code</strong> that makes it work that way.
+      The <em>"What just happened?"</em> panel below explains every action.
+    </p>
+  </header>
+
+  <!-- ── Controls ─────────────────────────────────────────────── -->
+  <section class="controls">
+    <button class="ctrl-btn" (click)="triggerCdCycle()">
+      <span class="ctrl-icon">🔄</span>
+      <div class="ctrl-text">
+        <span class="ctrl-label">Trigger CD Cycle</span>
+        <span class="ctrl-hint">
+          Only <span class="badge badge-default">Default</span> re-renders
+        </span>
+      </div>
+    </button>
+
+    <button class="ctrl-btn" (click)="changeInput()">
+      <span class="ctrl-icon">📝</span>
+      <div class="ctrl-text">
+        <span class="ctrl-label">Change Input</span>
+        <span class="ctrl-hint">
+          <span class="badge badge-default">Default</span>
+          <span class="badge badge-onpush">OnPush</span> re-render
+        </span>
+      </div>
+    </button>
+
+    <button class="ctrl-btn" (click)="updateSignal()">
+      <span class="ctrl-icon">〽</span>
+      <div class="ctrl-text">
+        <span class="ctrl-label">Update Signal</span>
+        <span class="ctrl-hint">
+          <span class="badge badge-default">Default</span>
+          <span class="badge badge-signal">Signal</span> re-render
+        </span>
+      </div>
+    </button>
+
+    <button class="ctrl-btn ctrl-btn--ghost" (click)="reset()">
+      <span class="ctrl-icon">↺</span>
+      <div class="ctrl-text">
+        <span class="ctrl-label">Reset All</span>
+      </div>
+    </button>
+  </section>
+
+  <!-- ── Current state bar ─────────────────────────────────────── -->
+  <div class="state-bar">
+    <div class="state-item">
+      <span class="state-key">primitiveValue</span>
+      <code class="state-val">{{ primitiveValue }}</code>
+    </div>
+    <div class="state-item">
+      <span class="state-key">sharedSignal()</span>
+      <code class="state-val">{{ labState.sharedSignal() }}</code>
+    </div>
+    <div class="state-item">
+      <span class="state-key">events logged</span>
+      <code class="state-val">{{ renderLog().length }}</code>
+    </div>
+  </div>
+
+  <!-- ── Strategy panels ───────────────────────────────────────── -->
+  <section class="strategy-grid">
+    <app-default-cd
+      [value]="primitiveValue"
+      [renderCount]="defaultRenders()"
+      [flashTrigger]="defaultFlash()"
+    />
+
+    <app-onpush-cd
+      [value]="primitiveValue"
+      [renderCount]="onpushRenders()"
+      [flashTrigger]="onpushFlash()"
+    />
+
+    <app-signal-cd
+      [renderCount]="signalRenders()"
+      [flashTrigger]="signalFlash()"
+    />
+  </section>
+
+  <!-- ── Teaching panel: "What just happened?" ─────────────────── -->
+  @if (lastExplanation(); as exp) {
+    <section class="explain-panel" role="region" aria-label="Explanation">
+
+      <div class="explain-header">
+        <span class="explain-icon">💡</span>
+        <div>
+          <div class="explain-heading">What just happened?</div>
+          <div class="explain-title">{{ exp.title }}</div>
+        </div>
+      </div>
+
+      <!-- Per-strategy result badges -->
+      <div class="explain-results">
+        <div class="result-card" [class.result-card--rendered]="exp.default.rendered"
+                                 [class.result-card--skipped]="!exp.default.rendered">
+          <div class="result-top">
+            <span class="result-strategy-name">Default</span>
+            <span class="result-verdict">
+              {{ exp.default.rendered ? '✓ Rendered' : '✗ Skipped' }}
+            </span>
+          </div>
+          <p class="result-why">{{ exp.default.why }}</p>
+        </div>
+
+        <div class="result-card" [class.result-card--rendered]="exp.onpush.rendered"
+                                 [class.result-card--skipped]="!exp.onpush.rendered">
+          <div class="result-top">
+            <span class="result-strategy-name">OnPush</span>
+            <span class="result-verdict">
+              {{ exp.onpush.rendered ? '✓ Rendered' : '✗ Skipped' }}
+            </span>
+          </div>
+          <p class="result-why">{{ exp.onpush.why }}</p>
+        </div>
+
+        <div class="result-card" [class.result-card--rendered]="exp.signal.rendered"
+                                 [class.result-card--skipped]="!exp.signal.rendered">
+          <div class="result-top">
+            <span class="result-strategy-name">Signal</span>
+            <span class="result-verdict">
+              {{ exp.signal.rendered ? '✓ Rendered' : '✗ Skipped' }}
+            </span>
+          </div>
+          <p class="result-why">{{ exp.signal.why }}</p>
+        </div>
+      </div>
+
+      <!-- Plain-English reason -->
+      <p class="explain-reason">{{ exp.reason }}</p>
+
+      <!-- Code showing the Angular rules in play -->
+      <div class="explain-code-block">
+        <div class="explain-code-label">
+          <span>📄</span>
+          <span>Angular code — why this happened</span>
+        </div>
+        <pre class="explain-code-pre">{{ exp.code }}</pre>
+      </div>
+
+    </section>
+  } @else {
+    <div class="explain-empty">
+      <span class="explain-empty-icon">💡</span>
+      <span>Click a button above — a detailed explanation will appear here.</span>
+    </div>
+  }
+
+  <!-- ── Render timeline ───────────────────────────────────────── -->
+  <section class="render-log">
+    <div class="log-header">
+      <h3 class="log-title">Render Timeline</h3>
+      <span class="log-count">{{ renderLog().length }} events</span>
+    </div>
+
+    <div class="log-body">
+      @for (entry of renderLog(); track entry.id) {
+        <div class="log-entry" [class.log-entry--first]="$first">
+          <span class="log-time">{{ formatTime(entry.timestamp) }}</span>
+          <span class="log-trigger">{{ entry.trigger }}</span>
+          <div class="log-strategies">
+            @for (s of entry.strategies; track s) {
+              <span class="log-badge" [class]="'log-badge--' + s">{{ s }}</span>
+            }
+          </div>
+        </div>
+      } @empty {
+        <div class="log-empty">
+          No events yet — click a button above to begin.
+        </div>
+      }
+    </div>
+  </section>
+
+</div>

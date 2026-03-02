@@ -1,3 +1,61 @@
 import { Routes } from '@angular/router';
+import { ShellComponent } from './layout/shell/shell.component';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  {
+    path: '',
+    component: ShellComponent,
+    children: [
+      { path: '', redirectTo: 'change-detection', pathMatch: 'full' },
+      {
+        path: 'change-detection',
+        loadComponent: () =>
+          import('./features/change-detection/change-detection-lab.component').then(
+            (m) => m.ChangeDetectionLabComponent,
+          ),
+      },
+      {
+        path: 'signals',
+        loadComponent: () =>
+          import('./features/signals/signals-placeholder.component').then(
+            (m) => m.SignalsPlaceholderComponent,
+          ),
+      },
+      {
+        path: 'rxjs',
+        loadComponent: () =>
+          import('./features/rxjs-lab/rxjs-lab-placeholder.component').then(
+            (m) => m.RxjsLabPlaceholderComponent,
+          ),
+      },
+      {
+        path: 'router',
+        loadComponent: () =>
+          import(
+            './features/router-lifecycle/router-lifecycle-placeholder.component'
+          ).then((m) => m.RouterLifecyclePlaceholderComponent),
+      },
+      {
+        path: 'di',
+        loadComponent: () =>
+          import('./features/di-explorer/di-explorer-placeholder.component').then(
+            (m) => m.DiExplorerPlaceholderComponent,
+          ),
+      },
+      {
+        path: 'performance',
+        loadComponent: () =>
+          import('./features/performance/performance-placeholder.component').then(
+            (m) => m.PerformancePlaceholderComponent,
+          ),
+      },
+      {
+        path: 'replay',
+        loadComponent: () =>
+          import('./features/replay/replay-placeholder.component').then(
+            (m) => m.ReplayPlaceholderComponent,
+          ),
+      },
+    ],
+  },
+];

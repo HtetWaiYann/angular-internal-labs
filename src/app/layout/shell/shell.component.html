@@ -1,0 +1,47 @@
+<div class="shell-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">◈</span>
+      <div class="brand-text">
+        <span class="brand-title">Angular</span>
+        <span class="brand-sub">Internals Lab</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.route) {
+        @if (item.available) {
+          <a
+            class="nav-link"
+            [routerLink]="item.route"
+            routerLinkActive="nav-link--active"
+            [title]="item.description"
+          >
+            <span class="nav-icon">{{ item.icon }}</span>
+            <div class="nav-content">
+              <span class="nav-label">{{ item.label }}</span>
+              <span class="nav-desc">{{ item.description }}</span>
+            </div>
+          </a>
+        } @else {
+          <div class="nav-link nav-link--disabled" [title]="item.description">
+            <span class="nav-icon">{{ item.icon }}</span>
+            <div class="nav-content">
+              <span class="nav-label">{{ item.label }}</span>
+              <span class="nav-desc">{{ item.description }}</span>
+            </div>
+            <span class="nav-soon">Soon</span>
+          </div>
+        }
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <span class="version-tag">Angular v21 · Signals · RxJS 7</span>
+    </div>
+  </aside>
+
+  <main class="main-area">
+    <router-outlet />
+  </main>
+</div>
