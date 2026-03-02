@@ -1,6 +1,7 @@
 /**
  * Shared layout for lab pages: main content area + optional right sidebar.
  * Use with a single root element .lab-layout containing .lab-main and (optionally) .lab-sidebar-wrapper.
+ * Responsive: on mobile, sidebar becomes a drawer opened via nav bar "?" icon.
  */
 .lab-layout {
   display: flex;
@@ -21,4 +22,61 @@
   margin-left: auto;
   height: 100%;
   display: flex;
+}
+
+/* ── Mobile: concepts as overlay drawer (opened by ? in nav bar) ─── */
+@media (max-width: 900px) {
+  .lab-layout {
+    flex-direction: column;
+    height: auto;
+    min-height: 100%;
+  }
+
+  .lab-main {
+    max-width: none;
+    padding: 1.25rem 1rem;
+    flex: 0 0 auto;
+  }
+
+  .lab-sidebar-wrapper {
+    display: none;
+  }
+
+  body.concepts-drawer-open .lab-sidebar-wrapper {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 320px;
+    margin: 0;
+    height: 100%;
+    z-index: 500;
+    background: var(--bg-panel);
+    border-left: 1px solid var(--border);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
+    animation: concepts-drawer-in 0.25s ease;
+  }
+
+  body.concepts-drawer-open {
+    overflow: hidden;
+  }
+
+  body.concepts-drawer-open .lab-sidebar-wrapper .concepts-sidebar {
+    width: 320px;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    border-left: none;
+  }
+}
+
+@keyframes concepts-drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }

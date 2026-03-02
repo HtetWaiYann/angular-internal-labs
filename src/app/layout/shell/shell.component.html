@@ -1,7 +1,37 @@
-<div class="shell-layout">
+<div
+  class="shell-layout"
+  [class.nav-drawer-open]="navDrawerOpen()"
+>
+  <header class="mobile-nav-bar" aria-label="Mobile navigation">
+    <button
+      type="button"
+      class="mobile-nav-btn"
+      (click)="toggleNavDrawer()"
+      aria-label="Open menu"
+    >
+      <span class="mobile-nav-icon" aria-hidden="true">☰</span>
+    </button>
+    <h1 class="mobile-nav-title">{{ pageTitle() }}</h1>
+    <button
+      type="button"
+      class="mobile-nav-btn"
+      (click)="toggleConceptsDrawer()"
+      aria-label="Open concepts"
+    >
+      <span class="mobile-nav-icon" aria-hidden="true">?</span>
+    </button>
+  </header>
+
+  <button
+    type="button"
+    class="drawer-backdrop nav-backdrop"
+    (click)="closeNavDrawer()"
+    [class.visible]="navDrawerOpen()"
+    aria-hidden="true"
+  ></button>
+
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <span class="brand-icon">◈</span>
       <div class="brand-text">
         <span class="brand-title">Angular</span>
         <span class="brand-sub">Internals Lab</span>
@@ -16,8 +46,8 @@
             [routerLink]="item.route"
             routerLinkActive="nav-link--active"
             [title]="item.description"
+            (click)="closeNavDrawer()"
           >
-            <span class="nav-icon">{{ item.icon }}</span>
             <div class="nav-content">
               <span class="nav-label">{{ item.label }}</span>
               <span class="nav-desc">{{ item.description }}</span>
@@ -25,7 +55,6 @@
           </a>
         } @else {
           <div class="nav-link nav-link--disabled" [title]="item.description">
-            <span class="nav-icon">{{ item.icon }}</span>
             <div class="nav-content">
               <span class="nav-label">{{ item.label }}</span>
               <span class="nav-desc">{{ item.description }}</span>
@@ -37,9 +66,17 @@
     </nav>
 
     <div class="sidebar-footer">
-      <span class="version-tag">Angular v21 · Signals · RxJS 7</span>
+      <span class="sidebar-credit">Developed by Htet Wai Yan</span>
     </div>
   </aside>
+
+  <button
+    type="button"
+    class="drawer-backdrop concepts-backdrop"
+    (click)="closeConceptsDrawer()"
+    [class.visible]="conceptsDrawerOpen()"
+    aria-hidden="true"
+  ></button>
 
   <main class="main-area">
     <router-outlet />
