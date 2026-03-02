@@ -1,190 +1,160 @@
 <div class="cd-lab">
 
-  <!-- ── Header ───────────────────────────────────────────────── -->
+  <!-- ── Header ──────────────────────────────────────────── -->
   <header class="lab-header">
-    <div class="lab-title-row">
-      <span class="lab-icon">⚡</span>
-      <h1 class="lab-title">Change Detection Lab</h1>
-    </div>
+    <h1 class="lab-title">⚡ Change Detection Lab</h1>
     <p class="lab-desc">
-      Click a button to trigger different change-detection scenarios.
-      Each strategy panel shows its <strong>render count</strong>, the
-      <strong>current value</strong> it knows about, and the
-      <strong>Angular code</strong> that makes it work that way.
-      The <em>"What just happened?"</em> panel below explains every action.
+      Explore how Angular decides when to re-render a component.
+      Click <strong>Run</strong> to see it live.
     </p>
   </header>
 
-  <!-- ── Controls ─────────────────────────────────────────────── -->
-  <section class="controls">
-    <button class="ctrl-btn" (click)="triggerCdCycle()">
-      <span class="ctrl-icon">🔄</span>
-      <div class="ctrl-text">
-        <span class="ctrl-label">Trigger CD Cycle</span>
-        <span class="ctrl-hint">
-          Only <span class="badge badge-default">Default</span> re-renders
-        </span>
-      </div>
+  <!-- ── Tab bar ──────────────────────────────────────────── -->
+  <div class="tab-bar">
+    <button
+      class="tab"
+      [class.tab--active]="activeTab() === 'default'"
+      (click)="activeTab.set('default')"
+    >
+      <span class="tab-pip pip--default"></span>
+      Default
     </button>
-
-    <button class="ctrl-btn" (click)="changeInput()">
-      <span class="ctrl-icon">📝</span>
-      <div class="ctrl-text">
-        <span class="ctrl-label">Change Input</span>
-        <span class="ctrl-hint">
-          <span class="badge badge-default">Default</span>
-          <span class="badge badge-onpush">OnPush</span> re-render
-        </span>
-      </div>
+    <button
+      class="tab"
+      [class.tab--active]="activeTab() === 'onpush'"
+      (click)="activeTab.set('onpush')"
+    >
+      <span class="tab-pip pip--onpush"></span>
+      OnPush
     </button>
-
-    <button class="ctrl-btn" (click)="updateSignal()">
-      <span class="ctrl-icon">〽</span>
-      <div class="ctrl-text">
-        <span class="ctrl-label">Update Signal</span>
-        <span class="ctrl-hint">
-          <span class="badge badge-default">Default</span>
-          <span class="badge badge-signal">Signal</span> re-render
-        </span>
-      </div>
+    <button
+      class="tab"
+      [class.tab--active]="activeTab() === 'signal'"
+      (click)="activeTab.set('signal')"
+    >
+      <span class="tab-pip pip--signal"></span>
+      Signal
     </button>
-
-    <button class="ctrl-btn ctrl-btn--ghost" (click)="reset()">
-      <span class="ctrl-icon">↺</span>
-      <div class="ctrl-text">
-        <span class="ctrl-label">Reset All</span>
-      </div>
-    </button>
-  </section>
-
-  <!-- ── Current state bar ─────────────────────────────────────── -->
-  <div class="state-bar">
-    <div class="state-item">
-      <span class="state-key">primitiveValue</span>
-      <code class="state-val">{{ primitiveValue }}</code>
-    </div>
-    <div class="state-item">
-      <span class="state-key">sharedSignal()</span>
-      <code class="state-val">{{ labState.sharedSignal() }}</code>
-    </div>
-    <div class="state-item">
-      <span class="state-key">events logged</span>
-      <code class="state-val">{{ renderLog().length }}</code>
-    </div>
   </div>
 
-  <!-- ── Strategy panels ───────────────────────────────────────── -->
-  <section class="strategy-grid">
-    <app-default-cd
-      [value]="primitiveValue"
-      [renderCount]="defaultRenders()"
-      [flashTrigger]="defaultFlash()"
-    />
+  <!-- ── Default tab ──────────────────────────────────────── -->
+  @if (activeTab() === 'default') {
+    <div class="tab-pane">
 
-    <app-onpush-cd
-      [value]="primitiveValue"
-      [renderCount]="onpushRenders()"
-      [flashTrigger]="onpushFlash()"
-    />
-
-    <app-signal-cd
-      [renderCount]="signalRenders()"
-      [flashTrigger]="signalFlash()"
-    />
-  </section>
-
-  <!-- ── Teaching panel: "What just happened?" ─────────────────── -->
-  @if (lastExplanation(); as exp) {
-    <section class="explain-panel" role="region" aria-label="Explanation">
-
-      <div class="explain-header">
-        <span class="explain-icon">💡</span>
-        <div>
-          <div class="explain-heading">What just happened?</div>
-          <div class="explain-title">{{ exp.title }}</div>
+      <div class="code-block">
+        <div class="code-topbar">
+          <span class="code-filename">component.ts</span>
+          <button class="run-btn run-btn--default" (click)="runDefault()">
+            ▶ Run
+          </button>
         </div>
+        <pre class="code-pre">{{ code.default }}</pre>
       </div>
 
-      <!-- Per-strategy result badges -->
-      <div class="explain-results">
-        <div class="result-card" [class.result-card--rendered]="exp.default.rendered"
-                                 [class.result-card--skipped]="!exp.default.rendered">
-          <div class="result-top">
-            <span class="result-strategy-name">Default</span>
-            <span class="result-verdict">
-              {{ exp.default.rendered ? '✓ Rendered' : '✗ Skipped' }}
-            </span>
-          </div>
-          <p class="result-why">{{ exp.default.why }}</p>
-        </div>
+      <p class="tab-desc">
+        Checked on <strong>every</strong> change detection cycle.
+        Zone.js triggers a cycle after any async event — a click, timer, or HTTP response.
+        This component is always visited, no conditions.
+      </p>
 
-        <div class="result-card" [class.result-card--rendered]="exp.onpush.rendered"
-                                 [class.result-card--skipped]="!exp.onpush.rendered">
-          <div class="result-top">
-            <span class="result-strategy-name">OnPush</span>
-            <span class="result-verdict">
-              {{ exp.onpush.rendered ? '✓ Rendered' : '✗ Skipped' }}
-            </span>
+      <div class="live-area">
+        <span class="live-label">Live</span>
+        <app-default-cd
+          [renderCount]="defaultRenders()"
+          [value]="defaultValue()"
+          [flashTrigger]="defaultFlash()"
+        />
+        @if (defaultMsg(); as msg) {
+          <div class="status" [class.status--rendered]="msg.type === 'rendered'">
+            {{ msg.text }}
           </div>
-          <p class="result-why">{{ exp.onpush.why }}</p>
-        </div>
-
-        <div class="result-card" [class.result-card--rendered]="exp.signal.rendered"
-                                 [class.result-card--skipped]="!exp.signal.rendered">
-          <div class="result-top">
-            <span class="result-strategy-name">Signal</span>
-            <span class="result-verdict">
-              {{ exp.signal.rendered ? '✓ Rendered' : '✗ Skipped' }}
-            </span>
-          </div>
-          <p class="result-why">{{ exp.signal.why }}</p>
-        </div>
+        }
+        <button class="reset-btn" (click)="resetDefault()">↺ Reset</button>
       </div>
 
-      <!-- Plain-English reason -->
-      <p class="explain-reason">{{ exp.reason }}</p>
-
-      <!-- Code showing the Angular rules in play -->
-      <div class="explain-code-block">
-        <div class="explain-code-label">
-          <span>📄</span>
-          <span>Angular code — why this happened</span>
-        </div>
-        <pre class="explain-code-pre">{{ exp.code }}</pre>
-      </div>
-
-    </section>
-  } @else {
-    <div class="explain-empty">
-      <span class="explain-empty-icon">💡</span>
-      <span>Click a button above — a detailed explanation will appear here.</span>
     </div>
   }
 
-  <!-- ── Render timeline ───────────────────────────────────────── -->
-  <section class="render-log">
-    <div class="log-header">
-      <h3 class="log-title">Render Timeline</h3>
-      <span class="log-count">{{ renderLog().length }} events</span>
-    </div>
+  <!-- ── OnPush tab ───────────────────────────────────────── -->
+  @if (activeTab() === 'onpush') {
+    <div class="tab-pane">
 
-    <div class="log-body">
-      @for (entry of renderLog(); track entry.id) {
-        <div class="log-entry" [class.log-entry--first]="$first">
-          <span class="log-time">{{ formatTime(entry.timestamp) }}</span>
-          <span class="log-trigger">{{ entry.trigger }}</span>
-          <div class="log-strategies">
-            @for (s of entry.strategies; track s) {
-              <span class="log-badge" [class]="'log-badge--' + s">{{ s }}</span>
-            }
+      <div class="code-block">
+        <div class="code-topbar">
+          <span class="code-filename">component.ts</span>
+          <div class="run-group">
+            <button class="run-btn run-btn--onpush" (click)="changeInput()">
+              ▶ Change Input
+            </button>
+            <button class="run-btn run-btn--ghost" (click)="triggerCdOnly()">
+              CD cycle only
+            </button>
           </div>
         </div>
-      } @empty {
-        <div class="log-empty">
-          No events yet — click a button above to begin.
-        </div>
-      }
+        <pre class="code-pre">{{ code.onpush }}</pre>
+      </div>
+
+      <p class="tab-desc">
+        Skips the CD check unless an <strong>@Input reference changes</strong>
+        (compared by <code>===</code>).
+        A plain CD cycle triggered by an event elsewhere will not cause this component to re-render.
+      </p>
+
+      <div class="live-area">
+        <span class="live-label">Live</span>
+        <app-onpush-cd
+          [renderCount]="onpushRenders()"
+          [value]="onpushValue()"
+          [flashTrigger]="onpushFlash()"
+        />
+        @if (onpushMsg(); as msg) {
+          <div
+            class="status"
+            [class.status--rendered]="msg.type === 'rendered'"
+            [class.status--skipped]="msg.type === 'skipped'"
+          >{{ msg.text }}</div>
+        }
+        <button class="reset-btn" (click)="resetOnpush()">↺ Reset</button>
+      </div>
+
     </div>
-  </section>
+  }
+
+  <!-- ── Signal tab ───────────────────────────────────────── -->
+  @if (activeTab() === 'signal') {
+    <div class="tab-pane">
+
+      <div class="code-block">
+        <div class="code-topbar">
+          <span class="code-filename">component.ts</span>
+          <button class="run-btn run-btn--signal" (click)="updateSignal()">
+            ▶ Update Signal
+          </button>
+        </div>
+        <pre class="code-pre">{{ code.signal }}</pre>
+      </div>
+
+      <p class="tab-desc">
+        Angular tracks <strong>signal reads</strong> inside templates.
+        When a signal changes, only the views that read it are scheduled for update —
+        no full component tree walk.
+      </p>
+
+      <div class="live-area">
+        <span class="live-label">Live</span>
+        <app-signal-cd
+          [renderCount]="signalRenders()"
+          [flashTrigger]="signalFlash()"
+        />
+        @if (signalMsg(); as msg) {
+          <div class="status" [class.status--rendered]="msg.type === 'rendered'">
+            {{ msg.text }}
+          </div>
+        }
+        <button class="reset-btn" (click)="resetSignal()">↺ Reset</button>
+      </div>
+
+    </div>
+  }
 
 </div>

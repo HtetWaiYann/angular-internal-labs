@@ -14,34 +14,17 @@ import { CdLabStateService } from '../../services/cd-lab-state.service';
   selector: 'app-signal-cd',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="strategy-panel strategy-signal" #panel>
-      <div class="strategy-header">
-        <span class="strategy-badge badge-signal">Signal</span>
-        <code class="strategy-api">signal() + OnPush</code>
+    <div class="preview-card preview--signal" #card>
+      <div class="stat">
+        <div class="stat-num" style="color: var(--color-signal)">{{ renderCount }}</div>
+        <div class="stat-label">renders</div>
       </div>
-
-      <div class="render-counter">
-        <span class="render-number" style="color: var(--color-signal);">{{ renderCount }}</span>
-        <span class="render-label">renders</span>
-      </div>
-
-      <div class="strategy-data">
-        <div class="data-row">
-          <span class="data-key">Signal value</span>
-          <!-- Reading state.sharedSignal() here creates a reactive dependency.
-               Angular automatically re-renders this component when the signal changes. -->
-          <span class="data-val">{{ state.sharedSignal() }}</span>
-        </div>
-      </div>
-
-      <!-- Code snippet: shows the reactive signal read in the template -->
-      <div class="code-snippet">
-        <span class="snippet-label">Component code</span>
-        <pre class="snippet-pre">{{ code }}</pre>
-      </div>
-
-      <div class="strategy-rule">
-        Checked only when <strong>signal value changes</strong>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <!-- Reading state.sharedSignal() here creates a reactive dependency.
+             Angular auto-schedules a re-render when the signal changes. -->
+        <div class="stat-num">{{ state.sharedSignal() }}</div>
+        <div class="stat-label">signal value</div>
       </div>
     </div>
   `,
@@ -52,31 +35,23 @@ export class SignalCdComponent implements OnChanges {
   @Input() renderCount = 0;
   @Input() flashTrigger = 0;
 
-  @ViewChild('panel') private panelRef!: ElementRef<HTMLElement>;
-
-  readonly code =
-    `// Service holds the signal:\n` +
-    `class CdLabStateService {\n` +
-    `  sharedSignal = signal(0);\n` +
-    `}\n` +
-    `\n` +
-    `// Template reads the signal:\n` +
-    `// {{ state.sharedSignal() }}\n` +
-    `//\n` +
-    `// Angular tracks this read.\n` +
-    `// When the signal changes → re-render. ✓`;
+  @ViewChild('card') private cardRef!: ElementRef<HTMLElement>;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['flashTrigger'] && !changes['flashTrigger'].isFirstChange()) {
-      this.triggerFlash();
+    if (
+      changes['flashTrigger'] &&
+      !changes['flashTrigger'].isFirstChange() &&
+      changes['flashTrigger'].currentValue > changes['flashTrigger'].previousValue
+    ) {
+      this.flash();
     }
   }
 
-  private triggerFlash(): void {
-    const el = this.panelRef?.nativeElement;
+  private flash(): void {
+    const el = this.cardRef?.nativeElement;
     if (!el) return;
-    el.classList.remove('strategy-flash');
+    el.classList.remove('card--flash');
     void el.offsetWidth;
-    el.classList.add('strategy-flash');
+    el.classList.add('card--flash');
   }
 }
