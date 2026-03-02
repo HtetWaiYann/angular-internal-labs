@@ -1,0 +1,78 @@
+<aside class="concepts-sidebar">
+  <h2 class="sidebar-title">Concepts</h2>
+  <p class="sidebar-intro">
+    Concepts related to the selected tab: <strong>{{ activeTab() === 'default' ? 'Default' : (activeTab() === 'onpush' ? 'OnPush' : 'Signal') }}</strong>.
+  </p>
+
+  @if (activeTab() === 'default') {
+    <section class="concept-block">
+      <h3 class="concept-heading">Zone.js</h3>
+      <p class="concept-body">
+        Default strategy relies on <strong>Zone.js</strong>. Zone patches browser async APIs (e.g. <code>setTimeout</code>, <code>addEventListener</code>, <code>fetch</code>).
+        After any of these run, Zone notifies Angular and a change detection cycle runs.
+        Your Default component is then checked on every cycle — no extra code needed.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">ChangeDetectionStrategy</h3>
+      <p class="concept-body">
+        Each component has a strategy that tells Angular <em>when</em> it may check that component for changes.
+        <strong>Default</strong> means: check this component on every change detection run.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Default strategy</h3>
+      <p class="concept-body">
+        With <code>ChangeDetectionStrategy.Default</code>, the component is visited on every CD cycle. Simple and predictable, but in a large tree it can mean a lot of work. Use it when the tree is small or you want straightforward behavior.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'onpush') {
+    <section class="concept-block">
+      <h3 class="concept-heading">Zone.js</h3>
+      <p class="concept-body">
+        With Zone.js, any async action triggers a CD cycle. OnPush does <strong>not</strong> change when the cycle runs — it only controls whether <em>this</em> component is checked. So Zone still triggers the run; OnPush decides “skip this component unless inputs/events/signals say otherwise.”
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Zoneless</h3>
+      <p class="concept-body">
+        OnPush works in <strong>zoneless</strong> mode too. Without Zone, CD runs only when something Angular tracks changes (e.g. signal update, template event). OnPush still applies: the component is only checked when an <code>@Input()</code> reference changes, an event from the component fires, or a signal read in the template changes.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">ChangeDetectionStrategy</h3>
+      <p class="concept-body">
+        <strong>OnPush</strong> means Angular only checks this component when an <code>@Input()</code> reference changes, an event originated from the component, an observable with async pipe emits, or a signal read in the template changes.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">OnPush strategy</h3>
+      <p class="concept-body">
+        Inputs are compared by <strong>reference</strong> (<code>===</code>). Mutating an object does not trigger an update — use immutable updates or new references so the input reference changes.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'signal') {
+    <section class="concept-block">
+      <h3 class="concept-heading">Zoneless</h3>
+      <p class="concept-body">
+        Signals are the main way to drive updates in <strong>zoneless</strong> mode. When a signal changes, Angular schedules only the views that read it — no Zone needed. This lab runs with Zone, but the same signal code works in zoneless apps.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Signals</h3>
+      <p class="concept-body">
+        Signals are reactive values. When you read a signal in a template and it changes, Angular updates only the affected view instead of walking the whole tree. Components that use signals typically use OnPush. Signals work the same with or without Zone.js.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">OnPush with signals</h3>
+      <p class="concept-body">
+        Signal-based components usually use <code>ChangeDetectionStrategy.OnPush</code>. The signal update is what marks the view dirty; OnPush just keeps the rest of the tree from being checked unnecessarily.
+      </p>
+    </section>
+  }
+</aside>

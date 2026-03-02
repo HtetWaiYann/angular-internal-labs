@@ -1,7 +1,8 @@
 /* ── Lab wrapper ──────────────────────────────────────────── */
-.cd-lab {
-  padding: 2rem;
-  max-width: 720px;
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
 }
 
 /* ── Header ───────────────────────────────────────────────── */
@@ -23,6 +24,41 @@
 }
 
 .lab-desc strong {
+  color: var(--text-primary);
+}
+
+/* ── Zone vs Zoneless callout ──────────────────────────────── */
+.zone-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.875rem 1rem;
+  background: color-mix(in srgb, var(--color-default) 8%, var(--bg-panel));
+  border: 1px solid color-mix(in srgb, var(--color-default) 25%, transparent);
+  border-radius: 8px;
+}
+
+.zone-badge {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-default) 20%, transparent);
+  color: var(--color-default);
+  border: 1px solid color-mix(in srgb, var(--color-default) 40%, transparent);
+}
+
+.zone-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.zone-desc strong {
   color: var(--text-primary);
 }
 

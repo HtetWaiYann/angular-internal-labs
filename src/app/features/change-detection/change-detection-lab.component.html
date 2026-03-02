@@ -1,13 +1,13 @@
-<div class="cd-lab">
-
-  <!-- ── Header ──────────────────────────────────────────── -->
-  <header class="lab-header">
-    <h1 class="lab-title">⚡ Change Detection Lab</h1>
-    <p class="lab-desc">
-      Explore how Angular decides when to re-render a component.
-      Click <strong>Run</strong> to see it live.
-    </p>
-  </header>
+<div class="lab-layout">
+  <div class="lab-main">
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <header class="lab-header">
+      <h1 class="lab-title">⚡ Change Detection Lab</h1>
+      <p class="lab-desc">
+        Explore how Angular decides when to re-render a component.
+        Click <strong>Run</strong> to see it live.
+      </p>
+    </header>
 
   <!-- ── Tab bar ──────────────────────────────────────────── -->
   <div class="tab-bar">
@@ -157,4 +157,9 @@
     </div>
   }
 
+</div>
+
+<div class="lab-sidebar-wrapper">
+  <app-cd-concepts-sidebar [activeTab]="activeTab()" />
+</div>
 </div>

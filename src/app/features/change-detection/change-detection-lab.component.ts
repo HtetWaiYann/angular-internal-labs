@@ -3,6 +3,7 @@ import { CdLabStateService } from './services/cd-lab-state.service';
 import { DefaultCdComponent } from './components/default-cd/default-cd.component';
 import { OnPushCdComponent } from './components/onpush-cd/onpush-cd.component';
 import { SignalCdComponent } from './components/signal-cd/signal-cd.component';
+import { CdConceptsSidebarComponent } from './components/cd-concepts-sidebar/cd-concepts-sidebar.component';
 
 type Tab = 'default' | 'onpush' | 'signal';
 type MsgType = 'rendered' | 'skipped';
@@ -10,7 +11,12 @@ interface Msg { text: string; type: MsgType }
 
 @Component({
   selector: 'app-change-detection-lab',
-  imports: [DefaultCdComponent, OnPushCdComponent, SignalCdComponent],
+  imports: [
+    DefaultCdComponent,
+    OnPushCdComponent,
+    SignalCdComponent,
+    CdConceptsSidebarComponent,
+  ],
   templateUrl: './change-detection-lab.component.html',
   styleUrl: './change-detection-lab.component.css',
 })
