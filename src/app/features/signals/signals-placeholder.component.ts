@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   template: `
     <div class="coming-soon">
       <span class="cs-icon">〽</span>
-      <h2 class="cs-title">Signals Playground</h2>
+      <h2 class="cs-title">Signals</h2>
       <p class="cs-desc">
         Dependency graph · computed recalculation tracker · effect execution log ·
         circular dependency detection · batching visualizer

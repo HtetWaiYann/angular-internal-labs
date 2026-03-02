@@ -1,0 +1,323 @@
+/* ── Lab wrapper ──────────────────────────────────────────── */
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
+.lab-header {
+  margin-bottom: 2rem;
+}
+
+.lab-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.lab-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.lab-desc strong {
+  color: var(--text-primary);
+}
+
+/* ── Tab bar ──────────────────────────────────────────────── */
+.tab-bar {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.75rem;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+  font-family: inherit;
+}
+
+.tab:hover {
+  color: var(--text-secondary);
+}
+
+.tab--active {
+  color: var(--text-primary);
+  border-bottom-color: var(--color-accent);
+}
+
+.tab-pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pip--effect { background: var(--color-signal); }
+.pip--computed { background: var(--color-signal); }
+.pip--mutation { background: var(--color-onpush); }
+
+/* ── Tab pane ─────────────────────────────────────────────── */
+.tab-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── Code block ───────────────────────────────────────────── */
+.code-block {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.code-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+}
+
+.code-filename {
+  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.run-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.run-btn {
+  padding: 0.35rem 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.12s, transform 0.08s;
+}
+
+.run-btn:active {
+  transform: scale(0.97);
+}
+
+.run-btn--signal {
+  background: color-mix(in srgb, var(--color-signal) 15%, transparent);
+  color: var(--color-signal);
+  border-color: color-mix(in srgb, var(--color-signal) 30%, transparent);
+}
+
+.run-btn--signal:hover {
+  background: color-mix(in srgb, var(--color-signal) 25%, transparent);
+}
+
+.run-btn--ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+
+.run-btn--ghost:hover {
+  background: var(--bg-panel-hover);
+  color: var(--text-primary);
+}
+
+.code-pre {
+  margin: 0;
+  padding: 1.25rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  background: var(--bg-base);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* ── Tab description ──────────────────────────────────────── */
+.tab-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.tab-desc strong {
+  color: var(--text-primary);
+}
+
+.tab-desc code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--border) 40%, transparent);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+/* ── Live area ────────────────────────────────────────────── */
+.live-area {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.live-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+/* ── Log panel ────────────────────────────────────────────── */
+.log-panel {
+  padding: 1rem 1.25rem;
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.log-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.log-row:last-child {
+  border-bottom: none;
+}
+
+.log-time {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.log-msg {
+  color: var(--color-signal);
+}
+
+.log-empty {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.live-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-inline {
+  font-size: 0.9375rem;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+
+/* ── Comparison row (mutation vs immutable) ────────────────── */
+.comparison-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .comparison-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.preview-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 2rem;
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+}
+
+.preview--mutation { --card-color: var(--color-onpush); }
+.preview--signal { --card-color: var(--color-signal); }
+
+.preview-card .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+}
+
+.preview-card .stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.preview-card .stat-num {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.preview-card .stat-array {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  word-break: break-all;
+  margin-bottom: 0.5rem;
+}
+
+.preview-card .stat-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Reset button ─────────────────────────────────────────── */
+.reset-btn {
+  align-self: flex-start;
+  padding: 0.35rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.reset-btn:hover {
+  color: var(--text-secondary);
+  background: var(--bg-panel);
+  border-color: var(--border);
+}

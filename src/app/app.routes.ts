@@ -17,8 +17,8 @@ export const routes: Routes = [
       {
         path: 'signals',
         loadComponent: () =>
-          import('./features/signals/signals-placeholder.component').then(
-            (m) => m.SignalsPlaceholderComponent,
+          import('./features/signals/signals-playground.component').then(
+            (m) => m.SignalsPlaygroundComponent,
           ),
       },
       {

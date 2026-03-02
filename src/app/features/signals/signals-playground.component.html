@@ -1,0 +1,153 @@
+<div class="lab-layout">
+  <div class="lab-main">
+    <header class="lab-header">
+      <h1 class="lab-title">Signals Playground</h1>
+      <p class="lab-desc">
+        See how <strong>effect</strong>, <strong>computed</strong>, and signal updates behave.
+        Use the tabs and run buttons to explore.
+      </p>
+    </header>
+
+    <div class="tab-bar">
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'effect'"
+        (click)="activeTab.set('effect')"
+      >
+        <span class="tab-pip pip--effect"></span>
+        Effect log
+      </button>
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'computed'"
+        (click)="activeTab.set('computed')"
+      >
+        <span class="tab-pip pip--computed"></span>
+        Computed
+      </button>
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'mutation'"
+        (click)="activeTab.set('mutation')"
+      >
+        <span class="tab-pip pip--mutation"></span>
+        Mutation vs immutable
+      </button>
+    </div>
+
+    @if (activeTab() === 'effect') {
+      <div class="tab-pane">
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">effect-demo.ts</span>
+            <button class="run-btn run-btn--signal" (click)="state.incrementForEffect()">
+              ▶ Run
+            </button>
+          </div>
+          <pre class="code-pre">{{ code.effect }}</pre>
+        </div>
+        <p class="tab-desc">
+          <strong>effect()</strong> runs when any signal it reads changes. Each run is logged below.
+        </p>
+        <div class="live-area">
+          <span class="live-label">Effect execution log</span>
+          <div class="log-panel">
+            @for (entry of state.effectLog(); track entry.id) {
+              <div class="log-row">
+                <span class="log-time">{{ entry.time }}</span>
+                <span class="log-msg">{{ entry.message }}</span>
+              </div>
+            } @empty {
+              <div class="log-empty">No runs yet. Click Run above.</div>
+            }
+          </div>
+          <div class="live-stats">
+            <span class="stat-inline">source = {{ state.sourceForEffect() }}</span>
+          </div>
+          <button class="reset-btn" (click)="state.clearEffectLog()">↺ Reset</button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'computed') {
+      <div class="tab-pane">
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">computed-demo.ts</span>
+            <button class="run-btn run-btn--signal" (click)="state.incrementForComputed()">
+              ▶ Increment source
+            </button>
+          </div>
+          <pre class="code-pre">{{ code.computed }}</pre>
+        </div>
+        <p class="tab-desc">
+          <strong>computed()</strong> recalculates when its dependencies change. The effect that reads it runs on each recompute.
+        </p>
+        <div class="live-area">
+          <span class="live-label">Computed recalculation log</span>
+          <div class="log-panel">
+            @for (entry of state.computedLog(); track entry.id) {
+              <div class="log-row">
+                <span class="log-time">{{ entry.time }}</span>
+                <span class="log-msg">source = {{ entry.sourceValue }} → computed = {{ entry.computedValue }}</span>
+              </div>
+            } @empty {
+              <div class="log-empty">No recalculations yet. Click Increment source above.</div>
+            }
+          </div>
+          <div class="live-stats">
+            <span class="stat-inline">source = {{ state.sourceForComputed() }}</span>
+            <span class="stat-inline">doubled = {{ state.computedFromSource() }}</span>
+          </div>
+          <button class="reset-btn" (click)="state.clearComputedLog()">↺ Reset</button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'mutation') {
+      <div class="tab-pane">
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">mutation-demo.ts</span>
+            <div class="run-group">
+              <button class="run-btn run-btn--ghost" (click)="state.mutateArray()">
+                Mutate (push)
+              </button>
+              <button class="run-btn run-btn--signal" (click)="state.updateArrayImmutable()">
+                Immutable (spread)
+              </button>
+            </div>
+          </div>
+          <pre class="code-pre">{{ code.mutation }}</pre>
+        </div>
+        <p class="tab-desc">
+          Signals use <strong>reference equality</strong>. Mutating in place and returning the same reference does not notify. Returning a new array does.
+        </p>
+        <div class="live-area">
+          <span class="live-label">Live</span>
+          <div class="comparison-row">
+            <div class="preview-card preview--mutation">
+              <div class="stat">
+                <div class="stat-label">Mutable (same ref)</div>
+                <div class="stat-num stat-array">{{ formatArray(state.mutableArray()) }}</div>
+                <div class="stat-meta">Effect last ran: {{ state.lastMutableUpdate() ?? '—' }}</div>
+              </div>
+            </div>
+            <div class="preview-card preview--signal">
+              <div class="stat">
+                <div class="stat-label">Immutable (new ref)</div>
+                <div class="stat-num stat-array">{{ formatArray(state.immutableArray()) }}</div>
+                <div class="stat-meta">Effect last ran: {{ state.lastImmutableUpdate() ?? '—' }}</div>
+              </div>
+            </div>
+          </div>
+          <button class="reset-btn" (click)="state.clearMutationDemo()">↺ Reset</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="lab-sidebar-wrapper">
+    <app-signals-concepts-sidebar [activeTab]="activeTab()" />
+  </div>
+</div>

@@ -36,10 +36,10 @@ export class ShellComponent {
       description: 'Default vs OnPush vs Signal',
     },
     {
-      label: 'Signals Playground',
+      label: 'Signals',
       route: '/signals',
-      available: false,
-      description: 'Dependency graph + effects',
+      available: true,
+      description: 'Dependency graph',
     },
     {
       label: 'RxJS Lab',

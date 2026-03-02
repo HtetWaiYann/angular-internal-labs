@@ -1,0 +1,51 @@
+<aside class="concepts-sidebar">
+  <h2 class="sidebar-title">Concepts</h2>
+  <p class="sidebar-intro">
+    Concepts for: <strong>{{ activeTab() === 'effect' ? 'Effect log' : (activeTab() === 'computed' ? 'Computed' : 'Mutation vs immutable') }}</strong>.
+  </p>
+
+  @if (activeTab() === 'effect') {
+    <section class="concept-block">
+      <h3 class="concept-heading">effect()</h3>
+      <p class="concept-body">
+        <strong>effect()</strong> runs a side-effect when any signal it reads changes. Angular tracks which signals were read during the run and re-runs the effect when any of them change. Runs are scheduled asynchronously (after the current sync block).
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Execution log</h3>
+      <p class="concept-body">
+        Each time the effect runs, we log a line. Use this to see exactly when the effect fires in response to signal updates.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'computed') {
+    <section class="concept-block">
+      <h3 class="concept-heading">computed()</h3>
+      <p class="concept-body">
+        <strong>computed()</strong> derives a value from other signals. It recalculates only when one of its dependencies changes, and caches the result until then. Reading it in an effect ties the effect to that computed value.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Recalculation</h3>
+      <p class="concept-body">
+        When the source signal changes, the computed recalculates. The effect that reads the computed then runs, so we log each recompute in the panel.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'mutation') {
+    <section class="concept-block">
+      <h3 class="concept-heading">Reference equality</h3>
+      <p class="concept-body">
+        Angular signals notify consumers only when the new value is not equal to the previous one. For objects and arrays, comparison is by <strong>reference</strong> (<code>===</code>). Mutating in place and returning the same reference does not trigger updates.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Immutable updates</h3>
+      <p class="concept-body">
+        Returning a new array or object (e.g. <code>[...arr, item]</code>) gives a new reference, so the signal notifies and effects/views that read it re-run. Prefer immutable updates for predictable reactivity.
+      </p>
+    </section>
+  }
+</aside>
