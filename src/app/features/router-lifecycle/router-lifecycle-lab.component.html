@@ -8,61 +8,39 @@
       </p>
     </header>
 
-    <!-- ── Lifecycle pipeline ──────────────────────────────────────── -->
+    <!-- ── Lifecycle pipeline (static — always fully lit) ─────────── -->
     <div class="pipeline">
-      <div class="pipeline-step" [class.pipeline-step--hit]="state.phaseStatus().navStart">
+      <div class="pipeline-step pipeline-step--hit">
         <div class="pipeline-dot"></div>
         <div class="pipeline-label">Start</div>
       </div>
 
-      <div class="pipeline-line" [class.pipeline-line--hit]="state.phaseStatus().recognized"></div>
+      <div class="pipeline-line pipeline-line--hit"></div>
 
-      <div class="pipeline-step" [class.pipeline-step--hit]="state.phaseStatus().recognized">
+      <div class="pipeline-step pipeline-step--hit">
         <div class="pipeline-dot"></div>
         <div class="pipeline-label">Recognized</div>
       </div>
 
-      <div class="pipeline-line" [class.pipeline-line--hit]="state.phaseStatus().guardsStart"></div>
+      <div class="pipeline-line pipeline-line--hit"></div>
 
-      <div
-        class="pipeline-step pipeline-step--guard"
-        [class.pipeline-step--active]="state.phaseStatus().guardsStart && !state.phaseStatus().guardsEnd"
-        [class.pipeline-step--hit]="state.phaseStatus().guardsEnd"
-        [class.pipeline-step--skipped]="state.phaseStatus().navEnd && !state.phaseStatus().guardsStart"
-      >
+      <div class="pipeline-step pipeline-step--guard pipeline-step--hit">
         <div class="pipeline-dot"></div>
         <div class="pipeline-label">Guards</div>
       </div>
 
-      <div class="pipeline-line" [class.pipeline-line--hit]="state.phaseStatus().resolveStart"></div>
+      <div class="pipeline-line pipeline-line--hit"></div>
 
-      <div
-        class="pipeline-step pipeline-step--resolve"
-        [class.pipeline-step--active]="state.phaseStatus().resolveStart && !state.phaseStatus().resolveEnd"
-        [class.pipeline-step--hit]="state.phaseStatus().resolveEnd"
-        [class.pipeline-step--skipped]="state.phaseStatus().navEnd && !state.phaseStatus().resolveStart"
-      >
+      <div class="pipeline-step pipeline-step--resolve pipeline-step--hit">
         <div class="pipeline-dot"></div>
         <div class="pipeline-label">Resolve</div>
       </div>
 
-      <div
-        class="pipeline-line"
-        [class.pipeline-line--hit]="state.phaseStatus().navEnd || state.phaseStatus().cancelled || state.phaseStatus().error"
-      ></div>
+      <div class="pipeline-line pipeline-line--hit"></div>
 
-      <div
-        class="pipeline-step"
-        [class.pipeline-step--hit]="state.phaseStatus().navEnd"
-        [class.pipeline-step--cancelled]="state.phaseStatus().cancelled"
-        [class.pipeline-step--error]="state.phaseStatus().error"
-      >
+      <div class="pipeline-step pipeline-step--hit">
         <div class="pipeline-dot"></div>
-        <div class="pipeline-label">
-          @if (state.phaseStatus().cancelled) { Cancelled }
-          @else if (state.phaseStatus().error) { Error }
-          @else { End }
-        </div>
+        <div class="pipeline-label">End</div>
       </div>
     </div>
 
