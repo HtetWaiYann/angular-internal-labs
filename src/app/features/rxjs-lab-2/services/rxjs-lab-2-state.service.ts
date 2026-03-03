@@ -150,6 +150,7 @@ export class RxjsLab2StateService {
   clearTake(): void {
     this.takeOneLog.set([]);
     this.takeUntilLog.set([]);
+    this.takeUntilDestroyed.set(false);
   }
 
   // ── Tab: combineLatest ────────────────────────────────────

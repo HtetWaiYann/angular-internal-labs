@@ -20,7 +20,7 @@ export class RxjsLab2ConceptsSidebarComponent {
   readonly tabLabel = computed(() => {
     const t = this.activeTab();
     const labels: Record<RxjsLab2Tab, string> = {
-      'filter-distinct': 'map / filter / distinctUntilChanged',
+      'filter-distinct': 'distinctUntilChanged',
       search: 'switchMap + debounceTime',
       'catch-error': 'catchError',
       take: 'takeUntil / take(1)',

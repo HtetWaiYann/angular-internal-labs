@@ -46,6 +46,44 @@
   margin-bottom: 1rem;
 }
 
+.concept-block--toc {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
+.concept-toc {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.concept-toc li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  margin-bottom: 0.4rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.concept-toc li:last-child {
+  margin-bottom: 0;
+}
+
+.concept-toc--active {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.concept-toc .tab-pip {
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
 .concept-block:last-child {
   margin-bottom: 0;
 }

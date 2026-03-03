@@ -14,6 +14,17 @@
     </p>
   </section>
 
+  <section class="concept-block concept-block--toc">
+    <h3 class="concept-heading">In this lab</h3>
+    <ul class="concept-toc">
+      <li [class.concept-toc--active]="activeTab() === 'stream'"><span class="tab-pip pip--stream"></span>Stream + timeline — operator chain, map, filter</li>
+      <li [class.concept-toc--active]="activeTab() === 'lifecycle'"><span class="tab-pip pip--lifecycle"></span>Subscription — subscribe / unsubscribe lifecycle</li>
+      <li [class.concept-toc--active]="activeTab() === 'concurrency'"><span class="tab-pip pip--concurrency"></span>Concurrency — mergeMap vs switchMap</li>
+      <li [class.concept-toc--active]="activeTab() === 'error-retry'"><span class="tab-pip pip--error"></span>Error + retry — retry(n), error handling</li>
+      <li [class.concept-toc--active]="activeTab() === 'cold-hot'"><span class="tab-pip pip--coldhot"></span>Cold vs hot — share(), multicast</li>
+    </ul>
+  </section>
+
   <p class="sidebar-intro">
     Tab: <strong>{{ tabLabel() }}</strong>.
   </p>
