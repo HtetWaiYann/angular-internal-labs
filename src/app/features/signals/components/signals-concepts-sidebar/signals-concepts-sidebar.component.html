@@ -1,14 +1,24 @@
 <aside class="concepts-sidebar">
   <h2 class="sidebar-title">Concepts</h2>
   <p class="sidebar-intro">
-    Concepts for: <strong>{{ activeTab() === 'effect' ? 'Effect log' : (activeTab() === 'computed' ? 'Computed' : 'Mutation vs immutable') }}</strong>.
+    Concepts for: <strong>{{ tabLabel() }}</strong>.
   </p>
 
   @if (activeTab() === 'effect') {
     <section class="concept-block">
+      <h3 class="concept-heading">Dependencies</h3>
+      <p class="concept-body concept-deps">source → effect</p>
+    </section>
+    <section class="concept-block">
       <h3 class="concept-heading">effect()</h3>
       <p class="concept-body">
         <strong>effect()</strong> runs a side-effect when any signal it reads changes. Angular tracks which signals were read during the run and re-runs the effect when any of them change. Runs are scheduled asynchronously (after the current sync block).
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Initial run</h3>
+      <p class="concept-body">
+        The effect runs once when the reactive graph is first set up, so you may see one log entry on load. Each click of <strong>Increment</strong> schedules another run.
       </p>
     </section>
     <section class="concept-block">
@@ -21,6 +31,10 @@
 
   @if (activeTab() === 'computed') {
     <section class="concept-block">
+      <h3 class="concept-heading">Dependencies</h3>
+      <p class="concept-body concept-deps">source → computed → effect</p>
+    </section>
+    <section class="concept-block">
       <h3 class="concept-heading">computed()</h3>
       <p class="concept-body">
         <strong>computed()</strong> derives a value from other signals. It recalculates only when one of its dependencies changes, and caches the result until then. Reading it in an effect ties the effect to that computed value.
@@ -30,6 +44,25 @@
       <h3 class="concept-heading">Recalculation</h3>
       <p class="concept-body">
         When the source signal changes, the computed recalculates. The effect that reads the computed then runs, so we log each recompute in the panel.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'batching') {
+    <section class="concept-block">
+      <h3 class="concept-heading">Dependencies</h3>
+      <p class="concept-body concept-deps">a, b → effect</p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Batching</h3>
+      <p class="concept-body">
+        When you update multiple signals in the same synchronous block, Angular batches notifications. An effect that reads those signals runs <strong>once</strong> after the block, not once per update.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Why it matters</h3>
+      <p class="concept-body">
+        Batching avoids redundant effect runs and keeps the reactive graph efficient when many signals change together.
       </p>
     </section>
   }

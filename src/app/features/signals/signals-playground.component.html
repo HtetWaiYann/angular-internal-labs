@@ -27,6 +27,14 @@
       </button>
       <button
         class="tab"
+        [class.tab--active]="activeTab() === 'batching'"
+        (click)="activeTab.set('batching')"
+      >
+        <span class="tab-pip pip--batching"></span>
+        Batching
+      </button>
+      <button
+        class="tab"
         [class.tab--active]="activeTab() === 'mutation'"
         (click)="activeTab.set('mutation')"
       >
@@ -41,7 +49,7 @@
           <div class="code-topbar">
             <span class="code-filename">effect-demo.ts</span>
             <button class="run-btn run-btn--signal" (click)="state.incrementForEffect()">
-              ▶ Run
+              ▶ Increment
             </button>
           </div>
           <pre class="code-pre">{{ code.effect }}</pre>
@@ -57,14 +65,49 @@
                 <span class="log-time">{{ entry.time }}</span>
                 <span class="log-msg">{{ entry.message }}</span>
               </div>
-            } @empty {
-              <div class="log-empty">No runs yet. Click Run above.</div>
+            }             @empty {
+              <div class="log-empty">No runs yet. Click Increment above.</div>
             }
           </div>
           <div class="live-stats">
             <span class="stat-inline">source = {{ state.sourceForEffect() }}</span>
           </div>
           <button class="reset-btn" (click)="state.clearEffectLog()">↺ Reset</button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'batching') {
+      <div class="tab-pane">
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">batching-demo.ts</span>
+            <button class="run-btn run-btn--signal" (click)="state.updateBothInSameTick()">
+              ▶ Update both
+            </button>
+          </div>
+          <pre class="code-pre">{{ code.batching }}</pre>
+        </div>
+        <p class="tab-desc">
+          When multiple signals change in the <strong>same synchronous block</strong>, effects that read them run once after the block (batched).
+        </p>
+        <div class="live-area">
+          <span class="live-label">Effect execution log</span>
+          <div class="log-panel">
+            @for (entry of state.batchLog(); track entry.id) {
+              <div class="log-row">
+                <span class="log-time">{{ entry.time }}</span>
+                <span class="log-msg">{{ entry.message }}</span>
+              </div>
+            } @empty {
+              <div class="log-empty">No runs yet. Click Update both above.</div>
+            }
+          </div>
+          <div class="live-stats">
+            <span class="stat-inline">a = {{ state.batchA() }}</span>
+            <span class="stat-inline">b = {{ state.batchB() }}</span>
+          </div>
+          <button class="reset-btn" (click)="state.clearBatchLog()">↺ Reset</button>
         </div>
       </div>
     }
@@ -121,7 +164,7 @@
           <pre class="code-pre">{{ code.mutation }}</pre>
         </div>
         <p class="tab-desc">
-          Signals use <strong>reference equality</strong>. Mutating in place and returning the same reference does not notify. Returning a new array does.
+          Signals use <strong>reference equality</strong>. Mutating in place and returning the same reference does not notify. Returning a new array does. The left card may not re-render when you mutate (same ref), so the displayed array can stay stale.
         </p>
         <div class="live-area">
           <span class="live-label">Live</span>

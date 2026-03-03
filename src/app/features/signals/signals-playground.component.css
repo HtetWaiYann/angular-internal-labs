@@ -69,6 +69,7 @@
 
 .pip--effect { background: var(--color-signal); }
 .pip--computed { background: var(--color-signal); }
+.pip--batching { background: var(--color-default); }
 .pip--mutation { background: var(--color-onpush); }
 
 /* ── Tab pane ─────────────────────────────────────────────── */

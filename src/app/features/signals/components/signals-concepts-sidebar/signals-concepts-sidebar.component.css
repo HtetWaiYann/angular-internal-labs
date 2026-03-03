@@ -65,6 +65,12 @@
   color: var(--text-primary);
 }
 
+.concept-deps {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-signal);
+}
+
 .concept-body code {
   font-family: var(--font-mono);
   font-size: 0.75rem;

@@ -13,18 +13,28 @@ export interface ComputedLogEntry {
   computedValue: number;
 }
 
+export interface BatchLogEntry {
+  id: number;
+  time: string;
+  message: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SignalsPlaygroundStateService {
   private nextId = 0;
 
   readonly effectLog = signal<EffectLogEntry[]>([]);
   readonly computedLog = signal<ComputedLogEntry[]>([]);
+  readonly batchLog = signal<BatchLogEntry[]>([]);
 
   readonly sourceForEffect = signal(0);
   readonly sourceForComputed = signal(0);
   readonly computedFromSource = computed(
     () => this.sourceForComputed() * 2
   );
+
+  readonly batchA = signal(0);
+  readonly batchB = signal(0);
 
   readonly mutableArray = signal<number[]>([1, 2, 3]);
   readonly immutableArray = signal<number[]>([1, 2, 3]);
@@ -93,6 +103,30 @@ export class SignalsPlaygroundStateService {
         })
       );
     });
+
+    effect(() => {
+      const a = this.batchA();
+      const b = this.batchB();
+      const time = new Date().toLocaleTimeString('en-US', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+      this.batchLog.update((log) => [
+        ...log,
+        {
+          id: ++this.nextId,
+          time,
+          message: `effect ran — a = ${a}, b = ${b}`,
+        },
+      ]);
+    });
+  }
+
+  updateBothInSameTick(): void {
+    this.batchA.update((v) => v + 1);
+    this.batchB.update((v) => v + 1);
   }
 
   incrementForEffect(): void {
@@ -128,5 +162,11 @@ export class SignalsPlaygroundStateService {
     this.immutableArray.set([1, 2, 3]);
     this.lastMutableUpdate.set(null);
     this.lastImmutableUpdate.set(null);
+  }
+
+  clearBatchLog(): void {
+    this.batchLog.set([]);
+    this.batchA.set(0);
+    this.batchB.set(0);
   }
 }

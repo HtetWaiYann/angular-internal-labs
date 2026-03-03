@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { SignalsPlaygroundStateService } from './services/signals-playground-state.service';
 import { SignalsConceptsSidebarComponent } from './components/signals-concepts-sidebar/signals-concepts-sidebar.component';
 
-type Tab = 'effect' | 'computed' | 'mutation';
+type Tab = 'effect' | 'computed' | 'batching' | 'mutation';
 
 @Component({
   selector: 'app-signals-playground',
@@ -35,6 +35,19 @@ export class SignalsPlaygroundComponent {
       `\n` +
       `// When source changes, computed recalculates\n` +
       `// and the effect runs.`,
+
+    batching:
+      `const a = signal(0);\n` +
+      `const b = signal(0);\n` +
+      `\n` +
+      `effect(() => {\n` +
+      `  console.log('effect ran', a(), b());\n` +
+      `});\n` +
+      `\n` +
+      `// Updating both in the same synchronous block:\n` +
+      `a.update(n => n + 1);\n` +
+      `b.update(n => n + 1);\n` +
+      `// → Effect runs once (batched).`,
 
     mutation:
       `const arr = signal([1, 2, 3]);\n` +
