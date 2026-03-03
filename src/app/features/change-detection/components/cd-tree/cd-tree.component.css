@@ -1,0 +1,155 @@
+:host {
+  display: block;
+}
+
+/* ── SVG canvas ───────────────────────────────────────────── */
+.tree-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* ── Connection lines ─────────────────────────────────────── */
+.tree-line {
+  stroke: var(--border);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  transition: stroke 0.25s, stroke-width 0.25s;
+}
+
+.tree-line--active {
+  stroke: var(--text-muted);
+  stroke-width: 2;
+}
+
+/* ── Node base ────────────────────────────────────────────── */
+.node-rect {
+  fill: var(--bg-panel);
+  stroke: var(--border);
+  stroke-width: 1.5;
+  transition: fill 0.25s, stroke 0.25s, stroke-width 0.25s;
+}
+
+.node-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--text-secondary);
+  transition: fill 0.2s;
+  pointer-events: none;
+}
+
+.node-strategy {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 400;
+  fill: var(--text-muted);
+  transition: fill 0.2s;
+  pointer-events: none;
+}
+
+.node-state-icon {
+  font-size: 9px;
+  font-weight: 700;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+/* ── Framework nodes (AppRoot, CDLab) ─────────────────────── */
+.node-framework .node-rect {
+  fill: var(--bg-base);
+  stroke: color-mix(in srgb, var(--border) 80%, transparent);
+}
+
+.node-framework.node--active .node-rect {
+  stroke: var(--text-muted);
+  stroke-width: 2;
+  fill: color-mix(in srgb, var(--text-muted) 5%, var(--bg-panel));
+}
+
+.node-framework.node--active .node-name {
+  fill: var(--text-primary);
+}
+
+/* ── Default strategy color: blue ─────────────────────────── */
+.node-default.node--checked .node-rect {
+  fill: color-mix(in srgb, var(--color-default) 10%, var(--bg-panel));
+  stroke: var(--color-default);
+  stroke-width: 2;
+}
+
+.node-default.node--checked .node-name,
+.node-default.node--checked .node-state-icon {
+  fill: var(--color-default);
+}
+
+.node-default.node--skipped .node-rect {
+  fill: color-mix(in srgb, var(--color-onpush) 6%, var(--bg-panel));
+  stroke: color-mix(in srgb, var(--color-onpush) 40%, var(--border));
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+.node-default.node--skipped .node-name,
+.node-default.node--skipped .node-state-icon {
+  fill: var(--color-onpush);
+  opacity: 0.7;
+}
+
+/* ── OnPush strategy color: amber ─────────────────────────── */
+.node-onpush.node--checked .node-rect {
+  fill: color-mix(in srgb, var(--color-onpush) 10%, var(--bg-panel));
+  stroke: var(--color-onpush);
+  stroke-width: 2;
+}
+
+.node-onpush.node--checked .node-name,
+.node-onpush.node--checked .node-state-icon {
+  fill: var(--color-onpush);
+}
+
+.node-onpush.node--skipped .node-rect {
+  fill: color-mix(in srgb, var(--color-onpush) 6%, var(--bg-panel));
+  stroke: color-mix(in srgb, var(--color-onpush) 40%, var(--border));
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+.node-onpush.node--skipped .node-name,
+.node-onpush.node--skipped .node-state-icon {
+  fill: var(--color-onpush);
+  opacity: 0.7;
+}
+
+/* ── Signal strategy color: green ─────────────────────────── */
+.node-signal.node--checked .node-rect,
+.node-signal.node--targeted .node-rect {
+  fill: color-mix(in srgb, var(--color-signal) 10%, var(--bg-panel));
+  stroke: var(--color-signal);
+  stroke-width: 2;
+}
+
+.node-signal.node--targeted .node-rect {
+  stroke-width: 2.5;
+}
+
+.node-signal.node--checked .node-name,
+.node-signal.node--targeted .node-name,
+.node-signal.node--checked .node-state-icon,
+.node-signal.node--targeted .node-state-icon {
+  fill: var(--color-signal);
+}
+
+.node-signal.node--skipped .node-rect {
+  fill: color-mix(in srgb, var(--color-onpush) 6%, var(--bg-panel));
+  stroke: color-mix(in srgb, var(--color-onpush) 40%, var(--border));
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+.node-signal.node--skipped .node-name,
+.node-signal.node--skipped .node-state-icon {
+  fill: var(--color-onpush);
+  opacity: 0.7;
+}

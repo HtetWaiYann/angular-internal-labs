@@ -9,6 +9,17 @@
       </p>
     </header>
 
+  <!-- ── Component Tree ──────────────────────────────────── -->
+  <div class="tree-panel">
+    <div class="tree-panel-header">
+      <span class="tree-panel-label">Component Tree</span>
+      <span class="tree-panel-hint">Updates on every action — across all tabs</span>
+    </div>
+    <div class="tree-panel-body">
+      <app-cd-tree [state]="treeState()" [tick]="treeTick()" />
+    </div>
+  </div>
+
   <!-- ── Tab bar ──────────────────────────────────────────── -->
   <div class="tab-bar">
     <button
@@ -35,6 +46,13 @@
       <span class="tab-pip pip--signal"></span>
       Signal
     </button>
+    <!-- <button
+      class="tab"
+      [class.tab--active]="activeTab() === 'compare'"
+      (click)="activeTab.set('compare')"
+    >
+      Compare
+    </button> -->
   </div>
 
   <!-- ── Default tab ──────────────────────────────────────── -->
@@ -153,6 +171,130 @@
         }
         <button class="reset-btn" (click)="resetSignal()">↺ Reset</button>
       </div>
+
+    </div>
+  }
+
+  <!-- ── Compare tab ──────────────────────────────────────── -->
+  @if (activeTab() === 'compare') {
+    <div class="tab-pane">
+
+      <p class="tab-desc">
+        All three strategies respond to the <strong>same trigger</strong> differently.
+        Use the buttons below to see which components Angular checks, skips, or targets.
+      </p>
+
+      <!-- Action buttons -->
+      <div class="compare-actions">
+        <button class="run-btn run-btn--default" (click)="compareTriggerCd()">
+          Trigger CD cycle
+        </button>
+        <button class="run-btn run-btn--onpush" (click)="compareChangeInput()">
+          Change &#64;Input
+        </button>
+        <button class="run-btn run-btn--signal" (click)="compareUpdateSignal()">
+          Update Signal
+        </button>
+        <button class="reset-btn compare-reset" (click)="resetCompare()">↺ Reset</button>
+      </div>
+
+      <!-- 3-column strategy grid -->
+      <div class="compare-grid">
+
+        <!-- Default column -->
+        <div class="compare-col">
+          <div class="compare-col-header">
+            <span class="tab-pip pip--default"></span>
+            <span class="compare-col-name">Default</span>
+          </div>
+          <app-default-cd
+            [renderCount]="cmpDefaultRenders()"
+            [value]="0"
+            [flashTrigger]="cmpDefaultFlash()"
+          />
+          <div
+            class="compare-status"
+            [class.compare-status--checked]="cmpDefaultStatus()?.type === 'checked'"
+            [class.compare-status--skipped]="cmpDefaultStatus()?.type === 'skipped'"
+            [class.compare-status--idle]="!cmpDefaultStatus()"
+          >
+            @if (cmpDefaultStatus(); as s) {
+              <span class="cmp-icon">{{ s.type === 'checked' ? '✓' : '⊘' }}</span>
+              {{ s.label }}
+            } @else {
+              <span class="cmp-icon cmp-icon--idle">—</span>
+            }
+          </div>
+        </div>
+
+        <!-- OnPush column -->
+        <div class="compare-col">
+          <div class="compare-col-header">
+            <span class="tab-pip pip--onpush"></span>
+            <span class="compare-col-name">OnPush</span>
+          </div>
+          <app-onpush-cd
+            [renderCount]="cmpOnpushRenders()"
+            [value]="cmpOnpushValue()"
+            [flashTrigger]="cmpOnpushFlash()"
+          />
+          <div
+            class="compare-status"
+            [class.compare-status--checked]="cmpOnpushStatus()?.type === 'checked'"
+            [class.compare-status--skipped]="cmpOnpushStatus()?.type === 'skipped'"
+            [class.compare-status--idle]="!cmpOnpushStatus()"
+          >
+            @if (cmpOnpushStatus(); as s) {
+              <span class="cmp-icon">{{ s.type === 'checked' ? '✓' : '⊘' }}</span>
+              {{ s.label }}
+            } @else {
+              <span class="cmp-icon cmp-icon--idle">—</span>
+            }
+          </div>
+        </div>
+
+        <!-- Signal column -->
+        <div class="compare-col">
+          <div class="compare-col-header">
+            <span class="tab-pip pip--signal"></span>
+            <span class="compare-col-name">Signal</span>
+          </div>
+          <app-signal-cd
+            [renderCount]="cmpSignalRenders()"
+            [flashTrigger]="cmpSignalFlash()"
+          />
+          <div
+            class="compare-status"
+            [class.compare-status--checked]="cmpSignalStatus()?.type === 'checked'"
+            [class.compare-status--skipped]="cmpSignalStatus()?.type === 'skipped'"
+            [class.compare-status--targeted]="cmpSignalStatus()?.type === 'targeted'"
+            [class.compare-status--idle]="!cmpSignalStatus()"
+          >
+            @if (cmpSignalStatus(); as s) {
+              <span class="cmp-icon">{{ s.type === 'targeted' ? '⚡' : (s.type === 'checked' ? '✓' : '⊘') }}</span>
+              {{ s.label }}
+            } @else {
+              <span class="cmp-icon cmp-icon--idle">—</span>
+            }
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Insight callout -->
+      @if (cmpLastAction(); as action) {
+        <div class="compare-insight">
+          @if (action === 'cd-cycle') {
+            <p>Zone.js triggered a full CD pass. Angular walks the tree root-to-leaf. <strong>Default</strong> is always visited — no conditions. <strong>OnPush</strong> is skipped — no <code>&#64;Input</code> changed and nothing marked it dirty. <strong>Signal</strong> is skipped — no signal changed.</p>
+          }
+          @if (action === 'change-input') {
+            <p>An <strong>&#64;Input reference changed</strong> on the OnPush component, marking it dirty. Zone triggers a CD pass — <strong>Default</strong> is always visited. <strong>OnPush</strong> is checked because its dirty flag was set by the new input. <strong>Signal</strong> is skipped — no signal involved.</p>
+          }
+          @if (action === 'update-signal') {
+            <p>A <strong>signal was written</strong>. Angular schedules only the views that read it — no full tree walk. <strong>Default</strong> and <strong>OnPush</strong> have no signal dependency here, so both are skipped entirely.</p>
+          }
+        </div>
+      }
 
     </div>
   }

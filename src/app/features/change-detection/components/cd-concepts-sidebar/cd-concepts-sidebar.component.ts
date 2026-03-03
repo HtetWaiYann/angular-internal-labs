@@ -1,6 +1,6 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
-export type CdTab = 'default' | 'onpush' | 'signal';
+export type CdTab = 'default' | 'onpush' | 'signal' | 'compare';
 
 @Component({
   selector: 'app-cd-concepts-sidebar',
@@ -10,4 +10,12 @@ export type CdTab = 'default' | 'onpush' | 'signal';
 })
 export class CdConceptsSidebarComponent {
   readonly activeTab = input<CdTab>('default');
+
+  readonly tabLabel = computed(() => {
+    const t = this.activeTab();
+    if (t === 'default') return 'Default';
+    if (t === 'onpush') return 'OnPush';
+    if (t === 'signal') return 'Signal';
+    return 'Compare';
+  });
 }

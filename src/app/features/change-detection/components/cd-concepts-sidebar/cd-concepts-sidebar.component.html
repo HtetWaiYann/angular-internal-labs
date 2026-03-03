@@ -1,7 +1,7 @@
 <aside class="concepts-sidebar">
   <h2 class="sidebar-title">Concepts</h2>
   <p class="sidebar-intro">
-    Concepts related to the selected tab: <strong>{{ activeTab() === 'default' ? 'Default' : (activeTab() === 'onpush' ? 'OnPush' : 'Signal') }}</strong>.
+    Concepts related to the selected tab: <strong>{{ tabLabel() }}</strong>.
   </p>
 
   @if (activeTab() === 'default') {
@@ -51,6 +51,33 @@
       <h3 class="concept-heading">OnPush strategy</h3>
       <p class="concept-body">
         Inputs are compared by <strong>reference</strong> (<code>===</code>). Mutating an object does not trigger an update — use immutable updates or new references so the input reference changes.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'compare') {
+    <section class="concept-block">
+      <h3 class="concept-heading">The CD tree walk</h3>
+      <p class="concept-body">
+        When Angular runs change detection it starts at the root and visits every component. Each node is <em>checked</em> or <em>skipped</em> based on its strategy and whether it was marked dirty.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Default — always checked</h3>
+      <p class="concept-body">
+        <code>ChangeDetectionStrategy.Default</code> components are visited on every CD pass triggered by Zone.js. They are never skipped, regardless of whether inputs or state changed.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">OnPush — skipped unless dirty</h3>
+      <p class="concept-body">
+        <code>OnPush</code> components are skipped unless Angular marked them <em>dirty</em>. An <code>@Input</code> reference change, a component event, or an <code>async</code> pipe emission will mark it dirty for the next CD pass.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Signal — targeted update</h3>
+      <p class="concept-body">
+        A signal write bypasses the tree walk entirely. Angular schedules only the specific views that read the changed signal — no CD pass, no zone tick needed.
       </p>
     </section>
   }

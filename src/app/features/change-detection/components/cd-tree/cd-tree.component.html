@@ -1,0 +1,98 @@
+<svg
+  class="tree-svg"
+  viewBox="0 0 520 200"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+>
+
+  <!-- ── Connection lines ──────────────────────────────────────────────────── -->
+
+  <!-- AppRoot → CDLab vertical -->
+  <line x1="260" y1="40" x2="260" y2="74" class="tree-line"
+    [class.tree-line--active]="rootAnim() === 'active' || labAnim() === 'active'" />
+
+  <!-- CDLab → horizontal bar -->
+  <line x1="260" y1="110" x2="260" y2="132" class="tree-line"
+    [class.tree-line--active]="labAnim() === 'active'" />
+
+  <!-- Horizontal bar -->
+  <line x1="75" y1="132" x2="445" y2="132" class="tree-line"
+    [class.tree-line--active]="labAnim() === 'active'" />
+
+  <!-- Drops to each child -->
+  <line x1="75"  y1="132" x2="75"  y2="148" class="tree-line"
+    [class.tree-line--active]="labAnim() === 'active'" />
+  <line x1="260" y1="132" x2="260" y2="148" class="tree-line"
+    [class.tree-line--active]="labAnim() === 'active'" />
+  <line x1="445" y1="132" x2="445" y2="148" class="tree-line"
+    [class.tree-line--active]="labAnim() === 'active'" />
+
+
+  <!-- ── AppRoot node ──────────────────────────────────────────────────────── -->
+  <g class="tree-node node-framework" [class.node--active]="rootAnim() === 'active'">
+    <rect x="180" y="4" width="160" height="36" rx="7" class="node-rect" />
+    <text x="260" y="22" class="node-name" dominant-baseline="central" text-anchor="middle">AppRoot</text>
+  </g>
+
+
+  <!-- ── CDLab node ────────────────────────────────────────────────────────── -->
+  <g class="tree-node node-framework" [class.node--active]="labAnim() === 'active'">
+    <rect x="180" y="74" width="160" height="36" rx="7" class="node-rect" />
+    <text x="260" y="92" class="node-name" dominant-baseline="central" text-anchor="middle">CDLab</text>
+  </g>
+
+
+  <!-- ── Default child ─────────────────────────────────────────────────────── -->
+  <g class="tree-node node-default"
+    [class.node--checked] ="defaultAnim() === 'checked'"
+    [class.node--skipped] ="defaultAnim() === 'skipped'"
+    [class.node--targeted]="defaultAnim() === 'targeted'"
+  >
+    <rect x="15" y="148" width="120" height="44" rx="7" class="node-rect" />
+    <text x="75" y="163" class="node-name"     dominant-baseline="central" text-anchor="middle">DefaultCd</text>
+    <text x="75" y="179" class="node-strategy" dominant-baseline="central" text-anchor="middle">.Default</text>
+
+    @if (defaultAnim() !== 'idle') {
+      <text x="127" y="160" class="node-state-icon" dominant-baseline="central" text-anchor="end">
+        {{ defaultAnim() === 'checked' ? '✓' : (defaultAnim() === 'targeted' ? '⚡' : '⊘') }}
+      </text>
+    }
+  </g>
+
+
+  <!-- ── OnPush child ──────────────────────────────────────────────────────── -->
+  <g class="tree-node node-onpush"
+    [class.node--checked] ="onpushAnim() === 'checked'"
+    [class.node--skipped] ="onpushAnim() === 'skipped'"
+    [class.node--targeted]="onpushAnim() === 'targeted'"
+  >
+    <rect x="200" y="148" width="120" height="44" rx="7" class="node-rect" />
+    <text x="260" y="163" class="node-name"     dominant-baseline="central" text-anchor="middle">OnPushCd</text>
+    <text x="260" y="179" class="node-strategy" dominant-baseline="central" text-anchor="middle">.OnPush</text>
+
+    @if (onpushAnim() !== 'idle') {
+      <text x="312" y="160" class="node-state-icon" dominant-baseline="central" text-anchor="end">
+        {{ onpushAnim() === 'checked' ? '✓' : (onpushAnim() === 'targeted' ? '⚡' : '⊘') }}
+      </text>
+    }
+  </g>
+
+
+  <!-- ── Signal child ──────────────────────────────────────────────────────── -->
+  <g class="tree-node node-signal"
+    [class.node--checked] ="signalAnim() === 'checked'"
+    [class.node--skipped] ="signalAnim() === 'skipped'"
+    [class.node--targeted]="signalAnim() === 'targeted'"
+  >
+    <rect x="385" y="148" width="120" height="44" rx="7" class="node-rect" />
+    <text x="445" y="163" class="node-name"     dominant-baseline="central" text-anchor="middle">SignalCd</text>
+    <text x="445" y="179" class="node-strategy" dominant-baseline="central" text-anchor="middle">signal ⚡</text>
+
+    @if (signalAnim() !== 'idle') {
+      <text x="497" y="160" class="node-state-icon" dominant-baseline="central" text-anchor="end">
+        {{ signalAnim() === 'checked' ? '✓' : (signalAnim() === 'targeted' ? '⚡' : '⊘') }}
+      </text>
+    }
+  </g>
+
+</svg>

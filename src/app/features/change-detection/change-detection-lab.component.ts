@@ -4,10 +4,17 @@ import { DefaultCdComponent } from './components/default-cd/default-cd.component
 import { OnPushCdComponent } from './components/onpush-cd/onpush-cd.component';
 import { SignalCdComponent } from './components/signal-cd/signal-cd.component';
 import { CdConceptsSidebarComponent } from './components/cd-concepts-sidebar/cd-concepts-sidebar.component';
+import { CdTreeComponent, CdTreeState } from './components/cd-tree/cd-tree.component';
 
-type Tab = 'default' | 'onpush' | 'signal';
+export type Tab = 'default' | 'onpush' | 'signal' | 'compare';
 type MsgType = 'rendered' | 'skipped';
 interface Msg { text: string; type: MsgType }
+
+export type CmpStatusType = 'checked' | 'skipped' | 'targeted';
+export interface CmpStatus { type: CmpStatusType; label: string; }
+export type CmpAction = 'cd-cycle' | 'change-input' | 'update-signal' | null;
+
+const IDLE_TREE: CdTreeState = { default: 'idle', onpush: 'idle', signal: 'idle' };
 
 @Component({
   selector: 'app-change-detection-lab',
@@ -16,6 +23,7 @@ interface Msg { text: string; type: MsgType }
     OnPushCdComponent,
     SignalCdComponent,
     CdConceptsSidebarComponent,
+    CdTreeComponent,
   ],
   templateUrl: './change-detection-lab.component.html',
   styleUrl: './change-detection-lab.component.css',
@@ -24,6 +32,10 @@ export class ChangeDetectionLabComponent {
   readonly labState = inject(CdLabStateService);
 
   readonly activeTab = signal<Tab>('default');
+
+  // ── Component Tree visualization ──────────────────────────────────────────
+  readonly treeState = signal<CdTreeState>(IDLE_TREE);
+  readonly treeTick  = signal(0);
 
   // ── Default tab ───────────────────────────────────────────────────────────
   readonly defaultRenders = signal(0);
@@ -42,8 +54,24 @@ export class ChangeDetectionLabComponent {
   readonly signalFlash = signal(0);
   readonly signalMsg = signal<Msg | null>(null);
 
+  // ── Compare tab ───────────────────────────────────────────────────────────
+  readonly cmpDefaultRenders = signal(0);
+  readonly cmpDefaultFlash = signal(0);
+  readonly cmpDefaultStatus = signal<CmpStatus | null>(null);
+
+  readonly cmpOnpushRenders = signal(0);
+  readonly cmpOnpushValue = signal(0);
+  readonly cmpOnpushFlash = signal(0);
+  readonly cmpOnpushStatus = signal<CmpStatus | null>(null);
+
+  readonly cmpSignalRenders = signal(0);
+  readonly cmpSignalFlash = signal(0);
+  readonly cmpSignalStatus = signal<CmpStatus | null>(null);
+
+  readonly cmpLastAction = signal<CmpAction>(null);
+
   // ── Code samples ──────────────────────────────────────────────────────────
-  readonly code: Record<Tab, string> = {
+  readonly code: Record<Exclude<Tab, 'compare'>, string> = {
     default:
       `@Component({\n` +
       `  changeDetection: ChangeDetectionStrategy.Default\n` +
@@ -80,12 +108,19 @@ export class ChangeDetectionLabComponent {
       `}`,
   };
 
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  private setTree(state: CdTreeState): void {
+    this.treeState.set(state);
+    this.treeTick.update((v) => v + 1);
+  }
+
   // ── Default actions ───────────────────────────────────────────────────────
   runDefault(): void {
     this.defaultRenders.update((v) => v + 1);
     this.defaultValue.update((v) => v + 1);
     this.defaultFlash.update((v) => v + 1);
     this.defaultMsg.set({ text: 'CD cycle ran → Default always re-renders.', type: 'rendered' });
+    this.setTree({ default: 'checked', onpush: 'skipped', signal: 'skipped' });
   }
 
   resetDefault(): void {
@@ -104,6 +139,7 @@ export class ChangeDetectionLabComponent {
       text: `@Input changed to ${this.onpushValue()} → OnPush re-rendered.`,
       type: 'rendered',
     });
+    this.setTree({ default: 'checked', onpush: 'checked', signal: 'skipped' });
   }
 
   triggerCdOnly(): void {
@@ -111,6 +147,7 @@ export class ChangeDetectionLabComponent {
       text: 'CD cycle ran — @Input unchanged → OnPush skipped.',
       type: 'skipped',
     });
+    this.setTree({ default: 'checked', onpush: 'skipped', signal: 'skipped' });
   }
 
   resetOnpush(): void {
@@ -129,6 +166,7 @@ export class ChangeDetectionLabComponent {
       text: `signal() → ${this.labState.sharedSignal()} — Angular auto re-rendered.`,
       type: 'rendered',
     });
+    this.setTree({ default: 'skipped', onpush: 'skipped', signal: 'targeted' });
   }
 
   resetSignal(): void {
@@ -136,5 +174,55 @@ export class ChangeDetectionLabComponent {
     this.signalFlash.set(0);
     this.signalMsg.set(null);
     this.labState.sharedSignal.set(0);
+  }
+
+  // ── Compare actions ───────────────────────────────────────────────────────
+  compareTriggerCd(): void {
+    this.cmpDefaultRenders.update((v) => v + 1);
+    this.cmpDefaultFlash.update((v) => v + 1);
+    this.cmpDefaultStatus.set({ type: 'checked', label: 'checked' });
+    this.cmpOnpushStatus.set({ type: 'skipped', label: 'skipped' });
+    this.cmpSignalStatus.set({ type: 'skipped', label: 'skipped' });
+    this.cmpLastAction.set('cd-cycle');
+    this.setTree({ default: 'checked', onpush: 'skipped', signal: 'skipped' });
+  }
+
+  compareChangeInput(): void {
+    this.cmpDefaultRenders.update((v) => v + 1);
+    this.cmpDefaultFlash.update((v) => v + 1);
+    this.cmpDefaultStatus.set({ type: 'checked', label: 'checked' });
+    this.cmpOnpushRenders.update((v) => v + 1);
+    this.cmpOnpushValue.update((v) => v + 1);
+    this.cmpOnpushFlash.update((v) => v + 1);
+    this.cmpOnpushStatus.set({ type: 'checked', label: 'checked — @Input changed' });
+    this.cmpSignalStatus.set({ type: 'skipped', label: 'skipped' });
+    this.cmpLastAction.set('change-input');
+    this.setTree({ default: 'checked', onpush: 'checked', signal: 'skipped' });
+  }
+
+  compareUpdateSignal(): void {
+    this.cmpDefaultStatus.set({ type: 'skipped', label: 'skipped' });
+    this.cmpOnpushStatus.set({ type: 'skipped', label: 'skipped' });
+    this.labState.sharedSignal.update((v) => v + 1);
+    this.cmpSignalRenders.update((v) => v + 1);
+    this.cmpSignalFlash.update((v) => v + 1);
+    this.cmpSignalStatus.set({ type: 'targeted', label: 'targeted ⚡' });
+    this.cmpLastAction.set('update-signal');
+    this.setTree({ default: 'skipped', onpush: 'skipped', signal: 'targeted' });
+  }
+
+  resetCompare(): void {
+    this.cmpDefaultRenders.set(0);
+    this.cmpDefaultFlash.set(0);
+    this.cmpDefaultStatus.set(null);
+    this.cmpOnpushRenders.set(0);
+    this.cmpOnpushValue.set(0);
+    this.cmpOnpushFlash.set(0);
+    this.cmpOnpushStatus.set(null);
+    this.cmpSignalRenders.set(0);
+    this.cmpSignalFlash.set(0);
+    this.cmpSignalStatus.set(null);
+    this.labState.sharedSignal.set(0);
+    this.cmpLastAction.set(null);
   }
 }
