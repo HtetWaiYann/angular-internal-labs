@@ -56,7 +56,7 @@ export class ShellComponent {
     {
       label: 'Router Lifecycle',
       route: '/router',
-      available: false,
+      available: true,
       description: 'Guards + resolvers',
     },
     {

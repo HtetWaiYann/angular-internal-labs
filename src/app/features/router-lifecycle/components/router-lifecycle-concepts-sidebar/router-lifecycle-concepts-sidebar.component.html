@@ -1,0 +1,117 @@
+<aside class="concepts-sidebar">
+  <h2 class="sidebar-title">Concepts</h2>
+
+  @if (activeTab() === 'timeline') {
+    <section class="concept-block">
+      <h3 class="concept-heading">Navigation sequence</h3>
+      <p class="concept-body">
+        Every navigation fires the same sequence of events on <code>Router.events</code>.
+        Subscribe anywhere to observe the full lifecycle.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Event order</h3>
+      <ol class="concept-list">
+        <li><code>NavigationStart</code></li>
+        <li><code>RoutesRecognized</code></li>
+        <li><code>GuardsCheckStart</code> / <code>GuardsCheckEnd</code></li>
+        <li><code>ResolveStart</code> / <code>ResolveEnd</code></li>
+        <li><code>NavigationEnd</code></li>
+      </ol>
+      <p class="concept-body">
+        Steps 3 and 4 are skipped if the route has no guards or resolvers.
+        A blocked guard emits <code>NavigationCancel</code> instead of <code>NavigationEnd</code>.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Subscribing</h3>
+      <p class="concept-body">
+        Inject <code>Router</code> and subscribe to <code>router.events</code>.
+        Filter by event type using <code>instanceof</code> or the RxJS <code>filter</code> operator.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'guards') {
+    <section class="concept-block">
+      <h3 class="concept-heading">Guard types</h3>
+      <ul class="concept-list">
+        <li><code>canActivate</code> — block entering a route</li>
+        <li><code>canActivateChild</code> — block entering any child route</li>
+        <li><code>canDeactivate</code> — block leaving a route</li>
+        <li><code>canMatch</code> — prevent a route from being matched at all</li>
+      </ul>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Return values</h3>
+      <ul class="concept-list">
+        <li><code>true</code> — allow navigation</li>
+        <li><code>false</code> — block navigation (emits <code>NavigationCancel</code>)</li>
+        <li><code>UrlTree</code> — redirect to a different URL</li>
+        <li><code>Observable</code> / <code>Promise</code> — async guard; navigation waits</li>
+      </ul>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Execution order</h3>
+      <p class="concept-body">
+        <code>canMatch</code> runs first (during route matching).
+        Then <code>canActivate</code> — child-to-parent order.
+        Then <code>canActivateChild</code>.
+        Finally <code>canDeactivate</code> on the route being left.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'resolvers') {
+    <section class="concept-block">
+      <h3 class="concept-heading">What resolvers do</h3>
+      <p class="concept-body">
+        Resolvers fetch or compute data <em>before</em> the component activates.
+        The result is placed in <code>ActivatedRouteSnapshot.data</code> under the key you specify.
+        The component receives fully-loaded data on first render — no loading spinner needed in the component.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Trade-off</h3>
+      <p class="concept-body">
+        Resolvers delay navigation until data is ready. A slow resolver blocks the entire navigation.
+        Use the <strong>delay picker</strong> to see this effect live.
+        For large datasets, prefer fetching in the component and showing a skeleton UI instead.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Accessing data</h3>
+      <p class="concept-body">
+        Inject <code>ActivatedRoute</code> and read <code>route.snapshot.data['key']</code>
+        for one-time access, or <code>route.data</code> (an Observable) to react to changes
+        when the same component is reused across navigations.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'lazy') {
+    <section class="concept-block">
+      <h3 class="concept-heading">How lazy loading works</h3>
+      <p class="concept-body">
+        When a lazy route is first activated, the router requests the JS chunk from the server.
+        <code>RouteConfigLoadStart</code> fires immediately; <code>RouteConfigLoadEnd</code> fires
+        once the chunk is parsed and ready. The module is then cached for the session.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">loadComponent vs loadChildren</h3>
+      <ul class="concept-list">
+        <li><code>loadComponent</code> — lazy-loads a single standalone component (one chunk)</li>
+        <li><code>loadChildren</code> — lazy-loads a route array, useful for feature modules with multiple routes</li>
+      </ul>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Preloading</h3>
+      <p class="concept-body">
+        Angular's <code>PreloadAllModules</code> strategy preloads lazy chunks in the background
+        after the app is idle, eliminating the load delay for subsequent visits.
+        Custom preloading strategies give fine-grained control.
+      </p>
+    </section>
+  }
+</aside>

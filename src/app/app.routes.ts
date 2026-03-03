@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { ShellComponent } from './layout/shell/shell.component';
+import { demoGuard } from './features/router-lifecycle/guards/demo.guard';
+import { demoResolver } from './features/router-lifecycle/resolvers/demo.resolver';
 
 export const routes: Routes = [
   {
@@ -39,8 +41,42 @@ export const routes: Routes = [
         path: 'router',
         loadComponent: () =>
           import(
-            './features/router-lifecycle/router-lifecycle-placeholder.component'
-          ).then((m) => m.RouterLifecyclePlaceholderComponent),
+            './features/router-lifecycle/router-lifecycle-lab.component'
+          ).then((m) => m.RouterLifecycleLabComponent),
+        canActivate: [demoGuard],
+        children: [
+          { path: '', pathMatch: 'full', redirectTo: 'timeline' },
+          {
+            path: 'timeline',
+            loadComponent: () =>
+              import(
+                './features/router-lifecycle/components/router-timeline-view/router-timeline-view.component'
+              ).then((m) => m.RouterTimelineViewComponent),
+          },
+          {
+            path: 'guarded',
+            canActivate: [demoGuard],
+            loadComponent: () =>
+              import(
+                './features/router-lifecycle/components/router-guarded-view/router-guarded-view.component'
+              ).then((m) => m.RouterGuardedViewComponent),
+          },
+          {
+            path: 'resolved',
+            resolve: { demoData: demoResolver },
+            loadComponent: () =>
+              import(
+                './features/router-lifecycle/components/router-resolved-view/router-resolved-view.component'
+              ).then((m) => m.RouterResolvedViewComponent),
+          },
+          {
+            path: 'lazy',
+            loadChildren: () =>
+              import('./features/router-lifecycle/router-lazy.routes').then(
+                (m) => m.ROUTER_LAZY_ROUTES,
+              ),
+          },
+        ],
       },
       {
         path: 'di',

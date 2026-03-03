@@ -1,0 +1,328 @@
+<div class="lab-layout">
+  <div class="lab-main">
+    <header class="lab-header">
+      <h1 class="lab-title">Router Lifecycle</h1>
+      <p class="lab-desc">
+        Angular's router fires a predictable sequence of events for every navigation.
+        Use the buttons below to trigger navigations and watch each phase appear live.
+      </p>
+    </header>
+
+    <!-- ── Lifecycle pipeline ──────────────────────────────────────── -->
+    <div class="pipeline">
+      <div class="pipeline-step" [class.pipeline-step--hit]="state.phaseStatus().navStart">
+        <div class="pipeline-dot"></div>
+        <div class="pipeline-label">Start</div>
+      </div>
+
+      <div class="pipeline-line" [class.pipeline-line--hit]="state.phaseStatus().recognized"></div>
+
+      <div class="pipeline-step" [class.pipeline-step--hit]="state.phaseStatus().recognized">
+        <div class="pipeline-dot"></div>
+        <div class="pipeline-label">Recognized</div>
+      </div>
+
+      <div class="pipeline-line" [class.pipeline-line--hit]="state.phaseStatus().guardsStart"></div>
+
+      <div
+        class="pipeline-step pipeline-step--guard"
+        [class.pipeline-step--active]="state.phaseStatus().guardsStart && !state.phaseStatus().guardsEnd"
+        [class.pipeline-step--hit]="state.phaseStatus().guardsEnd"
+        [class.pipeline-step--skipped]="state.phaseStatus().navEnd && !state.phaseStatus().guardsStart"
+      >
+        <div class="pipeline-dot"></div>
+        <div class="pipeline-label">Guards</div>
+      </div>
+
+      <div class="pipeline-line" [class.pipeline-line--hit]="state.phaseStatus().resolveStart"></div>
+
+      <div
+        class="pipeline-step pipeline-step--resolve"
+        [class.pipeline-step--active]="state.phaseStatus().resolveStart && !state.phaseStatus().resolveEnd"
+        [class.pipeline-step--hit]="state.phaseStatus().resolveEnd"
+        [class.pipeline-step--skipped]="state.phaseStatus().navEnd && !state.phaseStatus().resolveStart"
+      >
+        <div class="pipeline-dot"></div>
+        <div class="pipeline-label">Resolve</div>
+      </div>
+
+      <div
+        class="pipeline-line"
+        [class.pipeline-line--hit]="state.phaseStatus().navEnd || state.phaseStatus().cancelled || state.phaseStatus().error"
+      ></div>
+
+      <div
+        class="pipeline-step"
+        [class.pipeline-step--hit]="state.phaseStatus().navEnd"
+        [class.pipeline-step--cancelled]="state.phaseStatus().cancelled"
+        [class.pipeline-step--error]="state.phaseStatus().error"
+      >
+        <div class="pipeline-dot"></div>
+        <div class="pipeline-label">
+          @if (state.phaseStatus().cancelled) { Cancelled }
+          @else if (state.phaseStatus().error) { Error }
+          @else { End }
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Tab bar ─────────────────────────────────────────────────── -->
+    <div class="tab-bar">
+      <button class="tab" [class.tab--active]="activeTab() === 'timeline'" (click)="activeTab.set('timeline')">
+        <span class="tab-pip pip--nav"></span>Timeline
+      </button>
+      <button class="tab" [class.tab--active]="activeTab() === 'guards'" (click)="activeTab.set('guards')">
+        <span class="tab-pip pip--guard"></span>Guards
+      </button>
+      <button class="tab" [class.tab--active]="activeTab() === 'resolvers'" (click)="activeTab.set('resolvers')">
+        <span class="tab-pip pip--resolve"></span>Resolvers
+      </button>
+      <button class="tab" [class.tab--active]="activeTab() === 'lazy'" (click)="activeTab.set('lazy')">
+        <span class="tab-pip pip--lazy"></span>Lazy loading
+      </button>
+    </div>
+
+    <!-- ── Tab: Timeline ───────────────────────────────────────────── -->
+    @if (activeTab() === 'timeline') {
+      <div class="tab-pane">
+        <p class="tab-desc">
+          Subscribe to <code>Router.events</code> to observe every navigation.
+          Each navigation follows the same sequence: NavigationStart → RoutesRecognized →
+          GuardsCheckStart/End → ResolveStart/End → NavigationEnd.
+          Steps that are not needed (no guard, no resolver) are simply skipped.
+        </p>
+
+        <!-- Last nav summary -->
+        @if (state.lastNavSummary(); as s) {
+          <div class="nav-summary" [class.nav-summary--cancelled]="s.outcome === 'cancelled'" [class.nav-summary--error]="s.outcome === 'error'">
+            <span class="ns-id">Nav #{{ s.navId }}</span>
+            <span class="ns-sep">·</span>
+            <span class="ns-url">{{ s.url }}</span>
+            <span class="ns-sep">·</span>
+            <span class="ns-total">{{ s.totalDuration.toFixed(1) }}ms total</span>
+            @if (s.guardDuration !== null) {
+              <span class="ns-badge ns-badge--guard">Guard {{ s.guardDuration.toFixed(0) }}ms</span>
+            }
+            @if (s.resolverDuration !== null) {
+              <span class="ns-badge ns-badge--resolve">Resolve {{ s.resolverDuration.toFixed(0) }}ms</span>
+            }
+            @if (s.lazyDuration !== null) {
+              <span class="ns-badge ns-badge--lazy">Lazy {{ s.lazyDuration.toFixed(0) }}ms</span>
+            }
+            @if (s.outcome === 'cancelled') {
+              <span class="ns-badge ns-badge--cancel">Cancelled</span>
+            }
+          </div>
+        }
+
+        <!-- Trigger buttons -->
+        <div class="trigger-row">
+          <span class="trigger-label">Navigate to:</span>
+          <div class="trigger-buttons">
+            <a routerLink="/router/timeline" class="trig-btn">Plain</a>
+            <a routerLink="/router/guarded" class="trig-btn trig-btn--guard">+ Guard</a>
+            <a routerLink="/router/resolved" class="trig-btn trig-btn--resolve">+ Resolver</a>
+            <a routerLink="/router/lazy" class="trig-btn trig-btn--lazy">Lazy chunk</a>
+          </div>
+        </div>
+
+        <!-- Event log -->
+        <div class="log-section">
+          <div class="log-header">
+            <span class="live-label">Events — current navigation</span>
+            <button class="clear-btn" (click)="clearAll()">↺ Clear</button>
+          </div>
+          <div class="log-panel log-panel--lg">
+            @for (entry of state.currentNavTimeline(); track entry.id) {
+              <div class="log-row log-row--{{ entry.type }}">
+                <span class="log-elapsed">+{{ entry.elapsed.toFixed(1) }}ms</span>
+                <span class="log-event">{{ entry.label }}</span>
+                @if (entry.duration !== undefined) {
+                  <span class="log-dur">({{ entry.duration.toFixed(0) }}ms)</span>
+                }
+                @if (entry.url) { <span class="log-url">{{ entry.url }}</span> }
+                @if (entry.detail) { <span class="log-detail">{{ entry.detail }}</span> }
+              </div>
+            } @empty {
+              <div class="log-empty">Use the buttons above to trigger a navigation.</div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ── Tab: Guards ─────────────────────────────────────────────── -->
+    @if (activeTab() === 'guards') {
+      <div class="tab-pane">
+        <p class="tab-desc">
+          Guards run after routes are recognized and <em>before</em> the component activates.
+          <code>canActivate</code> blocks forward navigation; <code>canDeactivate</code> blocks leaving.
+          Return <code>true</code> to allow, <code>false</code> to block, or a <code>UrlTree</code> to redirect.
+          The router wraps the entire guard phase in <strong>GuardsCheckStart</strong> / <strong>GuardsCheckEnd</strong>.
+        </p>
+
+        <div class="code-block">
+          <div class="code-topbar"><span class="code-filename">demo.guard.ts</span></div>
+          <pre class="code-pre">export const demoGuard: CanActivateFn = (route, state) => &#123;
+  // Sync: return true | false | UrlTree
+  // Async: return Observable&lt;boolean&gt; | Promise&lt;boolean&gt;
+  return true;
+&#125;;
+
+// Attach to a route:
+&#123; path: 'guarded', canActivate: [demoGuard], loadComponent: ... &#125;</pre>
+        </div>
+
+        <div class="delay-row">
+          <span class="delay-label">Guard delay (simulates async guard):</span>
+          <div class="delay-btns">
+            @for (d of delayOptions; track d) {
+              <button
+                class="delay-btn"
+                [class.delay-btn--active]="config.guardDelayMs() === d"
+                (click)="setGuardDelay(d)"
+              >{{ d === 0 ? 'None' : d + 'ms' }}</button>
+            }
+          </div>
+          <a routerLink="/router/guarded" class="trig-btn trig-btn--guard">Navigate to guarded route</a>
+        </div>
+
+        <div class="log-section">
+          <span class="live-label">Guard phases — most recent first</span>
+          <div class="log-panel">
+            @for (phase of state.guardPhases(); track phase.navId) {
+              <div class="log-row">
+                <span class="log-navid">Nav #{{ phase.navId }}</span>
+                <span class="log-url">{{ phase.url }}</span>
+                <span class="log-dur log-dur--guard">{{ phase.duration.toFixed(0) }}ms</span>
+              </div>
+            } @empty {
+              <div class="log-empty">Navigate to /router/guarded to see guard phases.</div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ── Tab: Resolvers ──────────────────────────────────────────── -->
+    @if (activeTab() === 'resolvers') {
+      <div class="tab-pane">
+        <p class="tab-desc">
+          Resolvers run after <em>all guards pass</em> and before the component activates.
+          The resolved value is available synchronously via <code>ActivatedRouteSnapshot.data</code>
+          the moment the component's constructor runs — no loading state needed.
+          The router wraps resolver execution in <strong>ResolveStart</strong> / <strong>ResolveEnd</strong>.
+        </p>
+
+        <div class="code-block">
+          <div class="code-topbar"><span class="code-filename">demo.resolver.ts</span></div>
+          <pre class="code-pre">export const demoResolver: ResolveFn&lt;DemoData&gt; = (route, state) => &#123;
+  // Return sync data, Observable, or Promise:
+  return httpClient.get&lt;DemoData&gt;('/api/demo');
+&#125;;
+
+// Attach to a route:
+&#123; path: 'resolved', resolve: &#123; demoData: demoResolver &#125;, loadComponent: ... &#125;
+
+// Access in component:
+constructor(private route: ActivatedRoute) &#123;
+  const data = route.snapshot.data['demoData'];
+&#125;</pre>
+        </div>
+
+        <div class="delay-row">
+          <span class="delay-label">Resolver delay (simulates slow API):</span>
+          <div class="delay-btns">
+            @for (d of delayOptions; track d) {
+              <button
+                class="delay-btn"
+                [class.delay-btn--active]="config.resolverDelayMs() === d"
+                (click)="setResolverDelay(d)"
+              >{{ d === 0 ? 'None' : d + 'ms' }}</button>
+            }
+          </div>
+          <a routerLink="/router/resolved" class="trig-btn trig-btn--resolve">Navigate to resolved route</a>
+        </div>
+
+        <div class="log-section">
+          <span class="live-label">Resolver phases — most recent first</span>
+          <div class="log-panel">
+            @for (phase of state.resolverPhases(); track phase.navId) {
+              <div class="log-row">
+                <span class="log-navid">Nav #{{ phase.navId }}</span>
+                <span class="log-url">{{ phase.url }}</span>
+                <span class="log-dur log-dur--resolve">{{ phase.duration.toFixed(0) }}ms</span>
+              </div>
+            } @empty {
+              <div class="log-empty">Navigate to /router/resolved to see resolver phases.</div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ── Tab: Lazy loading ───────────────────────────────────────── -->
+    @if (activeTab() === 'lazy') {
+      <div class="tab-pane">
+        <p class="tab-desc">
+          Lazy-loaded routes use <code>loadComponent</code> or <code>loadChildren</code> — the JS chunk
+          is fetched on-demand the <em>first</em> time the route activates.
+          <strong>RouteConfigLoadStart</strong> fires when the chunk is requested;
+          <strong>RouteConfigLoadEnd</strong> fires when it is ready.
+          Subsequent visits reuse the cached module and fire no extra events.
+        </p>
+
+        <div class="code-block">
+          <div class="code-topbar"><span class="code-filename">app.routes.ts</span></div>
+          <pre class="code-pre">// Single lazy component:
+&#123;
+  path: 'lazy',
+  loadComponent: () =>
+    import('./lazy.component').then(m => m.LazyComponent)
+&#125;
+
+// Lazy route module (multiple routes in one chunk):
+&#123;
+  path: 'lazy',
+  loadChildren: () =>
+    import('./lazy.routes').then(m => m.LAZY_ROUTES)
+&#125;</pre>
+        </div>
+
+        <div class="lazy-note">
+          <span class="lazy-note-icon">ℹ</span>
+          <span>
+            The first visit to <code>/router/lazy</code> loads the chunk and fires the events below.
+            Revisiting reuses the cached module — reload the page to see the event again.
+          </span>
+        </div>
+
+        <div class="trigger-row">
+          <a routerLink="/router/lazy" class="trig-btn trig-btn--lazy">Navigate to lazy route</a>
+        </div>
+
+        <div class="log-section">
+          <span class="live-label">Lazy load events — most recent first</span>
+          <div class="log-panel">
+            @for (phase of state.lazyLoadPhases(); track phase.path) {
+              <div class="log-row">
+                <span class="log-event log-event--lazy">chunk loaded</span>
+                <span class="log-detail">path: {{ phase.path }}</span>
+                <span class="log-dur log-dur--lazy">{{ phase.duration.toFixed(0) }}ms</span>
+              </div>
+            } @empty {
+              <div class="log-empty">Navigate to /router/lazy to see a chunk load.</div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Child route outlet — rendered below all tab content -->
+    <router-outlet />
+  </div>
+
+  <div class="lab-sidebar-wrapper">
+    <app-router-lifecycle-concepts-sidebar [activeTab]="activeTab()" />
+  </div>
+</div>
