@@ -1,0 +1,202 @@
+<div class="lab-layout">
+  <div class="lab-main">
+    <header class="lab-header">
+      <h1 class="lab-title">RxJS Lab 2 — Operators &amp; Angular</h1>
+      <p class="lab-desc">
+        Essential operators (map, filter, distinctUntilChanged, switchMap, debounceTime, catchError, takeUntil, take(1), combineLatest) and Angular integration (async pipe, BehaviorSubject).
+      </p>
+    </header>
+
+    <div class="tab-bar">
+      <button class="tab" [class.tab--active]="activeTab() === 'filter-distinct'" (click)="activeTab.set('filter-distinct')">
+        <span class="tab-pip pip--fd"></span>map / filter / distinct
+      </button>
+      <button class="tab" [class.tab--active]="activeTab() === 'search'" (click)="activeTab.set('search')">
+        <span class="tab-pip pip--search"></span>switchMap + debounce
+      </button>
+      <button class="tab" [class.tab--active]="activeTab() === 'catch-error'" (click)="activeTab.set('catch-error')">
+        <span class="tab-pip pip--err"></span>catchError
+      </button>
+      <button class="tab" [class.tab--active]="activeTab() === 'take'" (click)="activeTab.set('take')">
+        <span class="tab-pip pip--take"></span>takeUntil / take(1)
+      </button>
+      <button class="tab" [class.tab--active]="activeTab() === 'combine'" (click)="activeTab.set('combine')">
+        <span class="tab-pip pip--combine"></span>combineLatest
+      </button>
+      <!-- <button class="tab" [class.tab--active]="activeTab() === 'angular'" (click)="activeTab.set('angular')">
+        <span class="tab-pip pip--ng"></span>Angular
+      </button> -->
+    </div>
+
+    @if (activeTab() === 'filter-distinct') {
+      <div class="tab-pane">
+        <div class="input-row">
+          <label class="input-label">Source (comma numbers)</label>
+          <input type="text" class="input-field" [value]="state.filterDistinctSource()" (input)="state.filterDistinctSource.set($any($event.target).value)" />
+          <label class="input-label">Filter: keep &gt;</label>
+          <input type="number" class="input-field input-number" [value]="state.filterDistinctThreshold()" (input)="onThresholdInput($event)" />
+        </div>
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">filter-distinct.ts</span>
+            <button class="run-btn run-btn--signal" (click)="state.runFilterDistinct()">▶ Run</button>
+          </div>
+          <pre class="code-pre">{{ codeFilterDistinct() }}</pre>
+        </div>
+        <div class="live-area">
+          <span class="live-label">Emitted (after map, filter, distinctUntilChanged)</span>
+          <div class="log-panel">
+            @for (line of state.filterDistinctLog(); track $index) {
+              <div class="log-row"><span class="log-msg">{{ line }}</span></div>
+            } @empty {
+              <div class="log-empty">Click Run.</div>
+            }
+          </div>
+          <button class="reset-btn" (click)="state.clearFilterDistinct()">↺ Reset</button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'search') {
+      <div class="tab-pane">
+        <div class="input-row">
+          <label class="input-label">Query</label>
+          <input type="text" class="input-field" [value]="state.searchQuery()" (input)="state.searchQuery.set($any($event.target).value)" placeholder="type then trigger" />
+          <label class="input-label">debounceTime (ms)</label>
+          <input type="number" class="input-field input-number" [value]="state.searchDebounceMs()" (input)="onSearchDebounceInput($event)" />
+        </div>
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">search.ts</span>
+            <div class="run-group">
+              <button class="run-btn run-btn--signal" (click)="state.startSearch()">Start</button>
+              <button class="run-btn run-btn--default" (click)="state.triggerSearch()">▶ Trigger query</button>
+            </div>
+          </div>
+          <pre class="code-pre">{{ codeSearch() }}</pre>
+        </div>
+        <div class="live-area">
+          <span class="live-label">Log</span>
+          <div class="log-panel">
+            @for (line of state.searchLog(); track $index) { <div class="log-row"><span class="log-msg">{{ line }}</span></div> }
+            @empty { <div class="log-empty">Start then Trigger query.</div> }
+          </div>
+          <span class="live-label">Results</span>
+          <div class="log-panel">
+            @for (r of state.searchResults(); track $index) { <div class="log-row"><span class="log-msg">{{ r }}</span></div> }
+            @empty { <div class="log-empty">—</div> }
+          </div>
+          <button class="reset-btn" (click)="state.clearSearch()">↺ Reset</button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'catch-error') {
+      <div class="tab-pane">
+        <div class="input-row">
+          <label class="input-label">Fallback value</label>
+          <input type="text" class="input-field" [value]="state.catchErrorFallback()" (input)="state.catchErrorFallback.set($any($event.target).value)" />
+        </div>
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">catchError.ts</span>
+            <button class="run-btn run-btn--signal" (click)="state.runCatchError()">▶ Run</button>
+          </div>
+          <pre class="code-pre">{{ codeCatchError() }}</pre>
+        </div>
+        <div class="live-area">
+          <div class="log-panel">
+            @for (line of state.catchErrorLog(); track $index) { <div class="log-row"><span class="log-msg">{{ line }}</span></div> }
+            @empty { <div class="log-empty">Click Run.</div> }
+          </div>
+          <button class="reset-btn" (click)="state.clearCatchError()">↺ Reset</button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'take') {
+      <div class="tab-pane">
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">take.ts</span>
+            <div class="run-group">
+              <button class="run-btn run-btn--signal" (click)="state.runTakeOne()">take(1)</button>
+              <button class="run-btn run-btn--default" (click)="state.runTakeUntil()">takeUntil (2s)</button>
+            </div>
+          </div>
+          <pre class="code-pre">{{ codeTake }}</pre>
+        </div>
+        <div class="live-area">
+          <span class="live-label">take(1) log</span>
+          <div class="log-panel">
+            @for (line of state.takeOneLog(); track $index) { <div class="log-row"><span class="log-msg">{{ line }}</span></div> }
+          </div>
+          <span class="live-label">takeUntil log (stops after ~2s)</span>
+          <div class="log-panel">
+            @for (line of state.takeUntilLog(); track $index) { <div class="log-row"><span class="log-msg">{{ line }}</span></div> }
+            @if (state.takeUntilDestroyed()) { <div class="log-row log-msg">Destroy emitted.</div> }
+          </div>
+          <button class="reset-btn" (click)="state.clearTake()">↺ Reset</button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'combine') {
+      <div class="tab-pane">
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">combineLatest.ts</span>
+            <div class="run-group">
+              <button class="run-btn run-btn--signal" (click)="state.startCombineLatest()">Start</button>
+              <button class="run-btn run-btn--ghost" (click)="state.emitCombineA()">Emit A</button>
+              <button class="run-btn run-btn--ghost" (click)="state.emitCombineB()">Emit B</button>
+            </div>
+          </div>
+          <pre class="code-pre">{{ codeCombine() }}</pre>
+        </div>
+        <div class="live-area">
+          <span class="live-label">Combined [A, B] emissions</span>
+          <div class="log-panel">
+            @for (line of state.combineLog(); track $index) { <div class="log-row"><span class="log-msg">{{ line }}</span></div> }
+            @empty { <div class="log-empty">Start, then Emit A / Emit B.</div> }
+          </div>
+          <button class="reset-btn" (click)="state.clearCombine()">↺ Reset</button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'angular') {
+      <div class="tab-pane">
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">angular-rxjs.ts</span>
+          </div>
+          <pre class="code-pre">{{ codeAngular }}</pre>
+        </div>
+        <div class="live-area">
+          <span class="live-label">async pipe (auto subscribe/unsubscribe)</span>
+          <div class="preview-card preview--angular">
+            <div class="stat">
+              <div class="stat-label">count$ &#124; async</div>
+              <div class="stat-num">{{ state.count$ | async }}</div>
+              <button class="run-btn run-btn--signal" (click)="state.incrementAsync()">Increment</button>
+            </div>
+          </div>
+          <span class="live-label">BehaviorSubject in service (current value)</span>
+          <div class="input-row">
+            <input type="text" class="input-field" [value]="state.stateValue" (input)="state.setStateValue($any($event.target).value)" placeholder="state value" />
+          </div>
+          <div class="preview-card preview--angular">
+            <div class="stat">
+              <div class="stat-label">state$ &#124; async</div>
+              <div class="stat-num">{{ state.state$ | async }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+  <div class="lab-sidebar-wrapper">
+    <app-rxjs-lab-2-concepts-sidebar [activeTab]="activeTab()" />
+  </div>
+</div>

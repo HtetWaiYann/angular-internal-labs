@@ -42,10 +42,16 @@ export class ShellComponent {
       description: 'Dependency graph',
     },
     {
-      label: 'RxJS Lab',
+      label: 'RxJS Lab 1',
       route: '/rxjs',
-      available: false,
-      description: 'Stream builder + timeline',
+      available: true,
+      description: 'Core concepts + streams',
+    },
+    {
+      label: 'RxJS Lab 2',
+      route: '/rxjs-2',
+      available: true,
+      description: 'Operators + Angular',
     },
     {
       label: 'Router Lifecycle',

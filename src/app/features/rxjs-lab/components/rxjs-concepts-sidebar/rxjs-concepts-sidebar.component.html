@@ -1,0 +1,95 @@
+<aside class="concepts-sidebar">
+  <h2 class="sidebar-title">Concepts</h2>
+
+  <section class="concept-block concept-block--core">
+    <h3 class="concept-heading">Core concepts</h3>
+    <p class="concept-body">
+      <strong>Observables</strong> are the building block for async and event streams. They are lazy (start only when subscribed) and cancellable with <code>unsubscribe()</code>. Used by HttpClient, ActivatedRoute, FormControl.valueChanges.
+    </p>
+    <p class="concept-body">
+      <strong>Subjects</strong> multicast values to many observers. <code>BehaviorSubject</code> holds the current value and replays it to new subscribers — common for app-wide state in services.
+    </p>
+    <p class="concept-body">
+      <strong>Operators</strong> are pure functions used inside <code>.pipe()</code> to transform, filter, and combine streams declaratively.
+    </p>
+  </section>
+
+  <p class="sidebar-intro">
+    Tab: <strong>{{ tabLabel() }}</strong>.
+  </p>
+
+  @if (activeTab() === 'stream') {
+    <section class="concept-block">
+      <h3 class="concept-heading">Operator chain</h3>
+      <p class="concept-body">
+        <strong>pipe()</strong> passes values through operators in order. <code>map</code> transforms; <code>filter</code> keeps only values that pass a test. The timeline shows each value at each stage.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Emission timeline</h3>
+      <p class="concept-body">
+        Each log row is one emission. Order reflects when the value left each operator. Synchronous streams complete in one tick.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'lifecycle') {
+    <section class="concept-block">
+      <h3 class="concept-heading">Subscription</h3>
+      <p class="concept-body">
+        <strong>subscribe()</strong> starts the observable and returns a <strong>Subscription</strong>. The stream runs until it completes, errors, or you call <code>unsubscribe()</code>.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Lifecycle</h3>
+      <p class="concept-body">
+        Subscribed at / Unsubscribed at show when the subscription was active. Unsubscribing cancels the stream; no more emissions.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'concurrency') {
+    <section class="concept-block">
+      <h3 class="concept-heading">mergeMap</h3>
+      <p class="concept-body">
+        Each outer value starts an inner observable. All inner observables run in parallel; every completion is emitted. Good for "each click starts a request, show all results."
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">switchMap</h3>
+      <p class="concept-body">
+        Each new outer value cancels the previous inner observable. Only the latest inner result is emitted. Good for "only care about the latest search/request."
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'error-retry') {
+    <section class="concept-block">
+      <h3 class="concept-heading">retry</h3>
+      <p class="concept-body">
+        <strong>retry(n)</strong> resubscribes to the source up to <code>n</code> times when it errors. The source runs again from the start. If it keeps erroring, the subscription errors after retries.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Error handling</h3>
+      <p class="concept-body">
+        Use <code>catchError</code> to return a fallback stream, or <code>retry</code> to try again. The log shows next, error, and when a retry happens.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'cold-hot') {
+    <section class="concept-block">
+      <h3 class="concept-heading">Cold</h3>
+      <p class="concept-body">
+        A <strong>cold</strong> observable runs its producer for each subscriber. <code>of(1,2,3)</code> is cold: each subscriber gets 1, 2, 3 from an independent run.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Hot</h3>
+      <p class="concept-body">
+        A <strong>hot</strong> observable shares one run among subscribers. <code>share()</code> turns a cold observable into hot by multicasting. Late subscribers may miss earlier emissions.
+      </p>
+    </section>
+  }
+</aside>

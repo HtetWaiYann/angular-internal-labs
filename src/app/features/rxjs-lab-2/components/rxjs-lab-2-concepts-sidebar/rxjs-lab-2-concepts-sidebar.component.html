@@ -1,0 +1,62 @@
+<aside class="concepts-sidebar">
+  <h2 class="sidebar-title">Concepts</h2>
+  <p class="sidebar-intro">Tab: <strong>{{ tabLabel() }}</strong>.</p>
+
+  @if (activeTab() === 'filter-distinct') {
+    <section class="concept-block">
+      <h3 class="concept-heading">map()</h3>
+      <p class="concept-body">Transforms each emitted value. Essential for shaping data before it reaches the UI.</p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">filter() / distinctUntilChanged()</h3>
+      <p class="concept-body"><strong>filter()</strong> keeps only values that pass a condition. <strong>distinctUntilChanged()</strong> emits only when the value is different from the previous one, avoiding redundant work and duplicate API calls.</p>
+    </section>
+  }
+
+  @if (activeTab() === 'search') {
+    <section class="concept-block">
+      <h3 class="concept-heading">debounceTime()</h3>
+      <p class="concept-body">Waits until the source has not emitted for a given time, then emits the latest value. Crucial for search: wait for the user to stop typing before firing a request.</p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">switchMap()</h3>
+      <p class="concept-body">Maps to an inner observable and cancels the previous inner subscription when the outer emits again. Use for search: each new query cancels the previous request so only the latest result matters.</p>
+    </section>
+  }
+
+  @if (activeTab() === 'catch-error') {
+    <section class="concept-block">
+      <h3 class="concept-heading">catchError()</h3>
+      <p class="concept-body">Handles errors inside the pipeline. Return a fallback observable (e.g. <code>of(value)</code>) so the stream continues instead of breaking. Enables retry or default data.</p>
+    </section>
+  }
+
+  @if (activeTab() === 'take') {
+    <section class="concept-block">
+      <h3 class="concept-heading">take(1)</h3>
+      <p class="concept-body">Takes the first emission then completes and unsubscribes. Ideal for one-off data (e.g. a single config or route param).</p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">takeUntil()</h3>
+      <p class="concept-body">Completes when a notifier observable emits (e.g. a <code>destroy$</code> Subject in <code>ngOnDestroy</code>). Standard pattern to avoid memory leaks: <code>observable$.pipe(takeUntil(destroy$))</code>.</p>
+    </section>
+  }
+
+  @if (activeTab() === 'combine') {
+    <section class="concept-block">
+      <h3 class="concept-heading">combineLatest()</h3>
+      <p class="concept-body">Combines multiple observables and emits an array of the latest value from each whenever any of them emits. Useful for dashboards or UIs that depend on several changing sources (e.g. filters).</p>
+    </section>
+  }
+
+  @if (activeTab() === 'angular') {
+    <section class="concept-block">
+      <h3 class="concept-heading">async pipe</h3>
+      <p class="concept-body">Subscribes to an observable in the template and unsubscribes when the component is destroyed. Best practice for subscriptions in templates — no manual <code>subscribe()</code> or <code>ngOnDestroy</code> cleanup.</p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Services &amp; BehaviorSubject</h3>
+      <p class="concept-body">Use <strong>BehaviorSubject</strong> in a singleton service to hold app-wide or feature state. Expose <code>asObservable()</code> for read-only streams; call <code>next()</code> to update. Fits Angular DI and works with the async pipe.</p>
+    </section>
+  }
+</aside>

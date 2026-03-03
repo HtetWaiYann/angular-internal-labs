@@ -1,0 +1,345 @@
+<div class="lab-layout">
+  <div class="lab-main">
+    <header class="lab-header">
+      <h1 class="lab-title">RxJS Lab 1 — Core Concepts</h1>
+      <p class="lab-desc">
+        Observables, subscription lifecycle, operator chain, emission timeline,
+        concurrency, error + retry, and cold vs hot.
+      </p>
+    </header>
+
+    <div class="tab-bar">
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'stream'"
+        (click)="activeTab.set('stream')"
+      >
+        <span class="tab-pip pip--stream"></span>
+        Stream + timeline
+      </button>
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'lifecycle'"
+        (click)="activeTab.set('lifecycle')"
+      >
+        <span class="tab-pip pip--lifecycle"></span>
+        Subscription
+      </button>
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'concurrency'"
+        (click)="activeTab.set('concurrency')"
+      >
+        <span class="tab-pip pip--concurrency"></span>
+        Concurrency
+      </button>
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'error-retry'"
+        (click)="activeTab.set('error-retry')"
+      >
+        <span class="tab-pip pip--error"></span>
+        Error + retry
+      </button>
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'cold-hot'"
+        (click)="activeTab.set('cold-hot')"
+      >
+        <span class="tab-pip pip--coldhot"></span>
+        Cold vs hot
+      </button>
+    </div>
+
+    @if (activeTab() === 'stream') {
+      <div class="tab-pane">
+        <div class="input-row">
+          <label class="input-label">Source values (comma-separated)</label>
+          <input
+            type="text"
+            class="input-field"
+            [value]="state.streamSourceValues()"
+            (input)="state.streamSourceValues.set($any($event.target).value)"
+            placeholder="1, 2, 3, 4, 5"
+          />
+          <label class="input-label">Filter: keep values &gt;</label>
+          <input
+            type="number"
+            class="input-field input-number"
+            [value]="state.streamFilterThreshold()"
+            (input)="onStreamFilterInput($event)"
+          />
+        </div>
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">stream-demo.ts</span>
+            <button
+              class="run-btn run-btn--signal"
+              (click)="state.startStream()"
+              [disabled]="state.streamRunning()"
+            >
+              ▶ Start
+            </button>
+          </div>
+          <pre class="code-pre">{{ codeStream() }}</pre>
+        </div>
+        <p class="tab-desc">
+          Values flow through <strong>map</strong> and <strong>filter</strong>. The timeline shows each emission and which stage it passed.
+        </p>
+        <div class="live-area">
+          <span class="live-label">Emission timeline</span>
+          <div class="log-panel">
+            @for (entry of state.streamEmissions(); track entry.id) {
+              <div class="log-row">
+                <span class="log-time">{{ entry.time }}</span>
+                <span class="log-stage">{{ entry.stage }}</span>
+                <span class="log-msg">value = {{ entry.value }}</span>
+              </div>
+            } @empty {
+              <div class="log-empty">Click Start to run the stream.</div>
+            }
+          </div>
+          <div class="run-group">
+            <button class="reset-btn" (click)="state.stopStream()" [disabled]="!state.streamRunning()">Stop</button>
+            <button class="reset-btn" (click)="state.clearStream()">↺ Reset</button>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'lifecycle') {
+      <div class="tab-pane">
+        <div class="input-row">
+          <label class="input-label">Delay (ms) before first emission</label>
+          <input
+            type="number"
+            class="input-field input-number"
+            [value]="state.lifecycleDelayMs()"
+            (input)="onLifecycleDelayInput($event)"
+            min="0"
+          />
+        </div>
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">lifecycle-demo.ts</span>
+            <div class="run-group">
+              <button
+                class="run-btn run-btn--signal"
+                (click)="state.subscribeLifecycle()"
+                [disabled]="state.isSubscribed()"
+              >
+                Subscribe
+              </button>
+              <button
+                class="run-btn run-btn--ghost"
+                (click)="state.unsubscribeLifecycle()"
+                [disabled]="!state.isSubscribed()"
+              >
+                Unsubscribe
+              </button>
+            </div>
+          </div>
+          <pre class="code-pre">{{ codeLifecycle() }}</pre>
+        </div>
+        <p class="tab-desc">
+          <strong>Subscribe</strong> starts the stream; <strong>Unsubscribe</strong> cancels it. Subscribed at / Unsubscribed at show the lifecycle.
+        </p>
+        <div class="live-area">
+          <span class="live-label">Subscription lifecycle</span>
+          <div class="lifecycle-status">
+            <span class="status-badge" [class.status-badge--active]="state.isSubscribed()">
+              {{ state.isSubscribed() ? 'Subscribed' : 'Not subscribed' }}
+            </span>
+            <span class="status-meta">Subscribed at: {{ state.subscribedAt() ?? '—' }}</span>
+            <span class="status-meta">Unsubscribed at: {{ state.unsubscribedAt() ?? '—' }}</span>
+          </div>
+          <div class="log-panel">
+            @for (entry of state.lifecycleEmissions(); track entry.id) {
+              <div class="log-row">
+                <span class="log-time">{{ entry.time }}</span>
+                <span class="log-msg">value = {{ entry.value }}</span>
+              </div>
+            } @empty {
+              <div class="log-empty">Subscribe to see emissions.</div>
+            }
+          </div>
+          <button class="reset-btn" (click)="state.clearLifecycle()">↺ Reset</button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'concurrency') {
+      <div class="tab-pane">
+        <div class="input-row">
+          <label class="input-label">Inner delay (ms)</label>
+          <input
+            type="number"
+            class="input-field input-number"
+            [value]="state.concurrencyDelayMs()"
+            (input)="onConcurrencyDelayInput($event)"
+            min="0"
+          />
+        </div>
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">concurrency-demo.ts</span>
+            <div class="run-group">
+              <button
+                class="run-btn"
+                [class.run-btn--signal]="state.concurrencyMode() === 'mergeMap'"
+                [class.run-btn--ghost]="state.concurrencyMode() !== 'mergeMap'"
+                (click)="state.setConcurrencyMode('mergeMap')"
+              >
+                mergeMap
+              </button>
+              <button
+                class="run-btn"
+                [class.run-btn--signal]="state.concurrencyMode() === 'switchMap'"
+                [class.run-btn--ghost]="state.concurrencyMode() !== 'switchMap'"
+                (click)="state.setConcurrencyMode('switchMap')"
+              >
+                switchMap
+              </button>
+              <button class="run-btn run-btn--default" (click)="state.triggerConcurrency()">
+                ▶ Trigger
+              </button>
+            </div>
+          </div>
+          <pre class="code-pre">{{ codeConcurrency() }}</pre>
+        </div>
+        <p class="tab-desc">
+          Click <strong>Trigger</strong> several times quickly. <strong>mergeMap</strong> runs all inner observables; <strong>switchMap</strong> cancels the previous and only completes the latest.
+        </p>
+        <div class="live-area">
+          <span class="live-label">Emission log</span>
+          <div class="log-panel">
+            @for (entry of state.concurrencyEmissions(); track entry.id) {
+              <div class="log-row">
+                <span class="log-time">{{ entry.time }}</span>
+                <span class="log-msg">value = {{ entry.value }}</span>
+              </div>
+            } @empty {
+              <div class="log-empty">Select mode and click Trigger.</div>
+            }
+          </div>
+          <button class="reset-btn" (click)="state.clearConcurrency()">↺ Reset</button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'error-retry') {
+      <div class="tab-pane">
+        <div class="input-row">
+          <label class="input-label">Retry count</label>
+          <input
+            type="number"
+            class="input-field input-number"
+            [value]="state.retryCount()"
+            (input)="onRetryCountInput($event)"
+            min="0"
+          />
+        </div>
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">error-retry-demo.ts</span>
+            <button
+              class="run-btn run-btn--signal"
+              (click)="state.runErrorRetry()"
+              [disabled]="state.errorRetryRunning()"
+            >
+              ▶ Run
+            </button>
+          </div>
+          <pre class="code-pre">{{ codeErrorRetry() }}</pre>
+        </div>
+        <p class="tab-desc">
+          Stream emits 1, 2, then errors. <strong>retry(1)</strong> resubscribes once, so it runs again and errors again.
+        </p>
+        <div class="live-area">
+          <span class="live-label">Event log</span>
+          <div class="log-panel">
+            @for (entry of state.errorRetryEmissions(); track entry.id) {
+              <div class="log-row" [class.log-row--error]="entry.type === 'error'" [class.log-row--retry]="entry.type === 'retry'">
+                <span class="log-time">{{ entry.time }}</span>
+                <span class="log-msg">
+                  @switch (entry.type) {
+                    @case ('next') { next({{ entry.value }}) }
+                    @case ('error') { error }
+                    @case ('retry') { retry }
+                  }
+                </span>
+              </div>
+            } @empty {
+              <div class="log-empty">Click Run to see next / error / retry.</div>
+            }
+          </div>
+          <button class="reset-btn" (click)="state.clearErrorRetry()">↺ Reset</button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'cold-hot') {
+      <div class="tab-pane">
+        <div class="input-row">
+          <label class="input-label">Values (comma-separated)</label>
+          <input
+            type="text"
+            class="input-field"
+            [value]="state.coldHotValues()"
+            (input)="state.coldHotValues.set($any($event.target).value)"
+            placeholder="1, 2, 3"
+          />
+        </div>
+        <div class="code-block">
+          <div class="code-topbar">
+            <span class="code-filename">cold-hot-demo.ts</span>
+            <div class="run-group">
+              <button class="run-btn run-btn--signal" (click)="state.runCold()">▶ Run cold</button>
+              <button class="run-btn run-btn--default" (click)="state.runHot()">▶ Run hot</button>
+            </div>
+          </div>
+          <pre class="code-pre">{{ codeColdHot() }}</pre>
+        </div>
+        <p class="tab-desc">
+          <strong>Cold</strong>: each subscriber triggers the producer (so it runs twice). <strong>Hot</strong>: <code>share()</code> runs the producer once and multicasts to all subscribers.
+        </p>
+        <div class="live-area">
+          <span class="live-label">Live — compare how many times the producer ran</span>
+          <div class="comparison-row">
+            <div class="preview-card preview--cold">
+              <div class="producer-runs" [class.producer-runs--visible]="state.coldProducerRuns() > 0">
+                Producer ran <strong>{{ state.coldProducerRuns() }}</strong> time(s)
+              </div>
+              <div class="stat">
+                <div class="stat-label">Subscriber A</div>
+                <div class="stat-array">{{ formatArray(state.coldLogA()) }}</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Subscriber B</div>
+                <div class="stat-array">{{ formatArray(state.coldLogB()) }}</div>
+              </div>
+            </div>
+            <div class="preview-card preview--hot">
+              <div class="producer-runs" [class.producer-runs--visible]="state.hotProducerRuns() > 0">
+                Producer ran <strong>{{ state.hotProducerRuns() }}</strong> time(s)
+              </div>
+              <div class="stat">
+                <div class="stat-label">Subscriber A</div>
+                <div class="stat-array">{{ formatArray(state.hotLogA()) }}</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Subscriber B</div>
+                <div class="stat-array">{{ formatArray(state.hotLogB()) }}</div>
+              </div>
+            </div>
+          </div>
+          <button class="reset-btn" (click)="state.clearColdHot()">↺ Reset</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="lab-sidebar-wrapper">
+    <app-rxjs-concepts-sidebar [activeTab]="activeTab()" />
+  </div>
+</div>

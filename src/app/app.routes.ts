@@ -24,8 +24,15 @@ export const routes: Routes = [
       {
         path: 'rxjs',
         loadComponent: () =>
-          import('./features/rxjs-lab/rxjs-lab-placeholder.component').then(
-            (m) => m.RxjsLabPlaceholderComponent,
+          import('./features/rxjs-lab/rxjs-lab.component').then(
+            (m) => m.RxjsLabComponent,
+          ),
+      },
+      {
+        path: 'rxjs-2',
+        loadComponent: () =>
+          import('./features/rxjs-lab-2/rxjs-lab-2.component').then(
+            (m) => m.RxjsLab2Component,
           ),
       },
       {
