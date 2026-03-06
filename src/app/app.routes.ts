@@ -81,8 +81,8 @@ export const routes: Routes = [
       {
         path: 'di',
         loadComponent: () =>
-          import('./features/di-explorer/di-explorer-placeholder.component').then(
-            (m) => m.DiExplorerPlaceholderComponent,
+          import('./features/di-explorer/di-explorer-lab.component').then(
+            (m) => m.DiExplorerLabComponent,
           ),
       },
       {

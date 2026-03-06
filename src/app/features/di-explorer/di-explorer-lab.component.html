@@ -1,0 +1,91 @@
+<div class="lab-layout">
+  <div class="lab-main">
+    <header class="lab-header">
+      <h1 class="lab-title">DI Explorer</h1>
+      <p class="lab-desc">
+        Understand Angular's Dependency Injection: how injectors form a hierarchy,
+        where providers live, and how tokens are resolved when you call <code>inject()</code>.
+      </p>
+    </header>
+
+    <div class="tab-bar">
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'hierarchy'"
+        (click)="activeTab.set('hierarchy')"
+      >
+        <span class="tab-pip pip--hierarchy"></span>
+        Injector hierarchy
+      </button>
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'scope'"
+        (click)="activeTab.set('scope')"
+      >
+        <span class="tab-pip pip--scope"></span>
+        Provider scope
+      </button>
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'resolution'"
+        (click)="activeTab.set('resolution')"
+      >
+        <span class="tab-pip pip--resolution"></span>
+        Token resolution
+      </button>
+      <button
+        class="tab"
+        [class.tab--active]="activeTab() === 'tracing'"
+        (click)="activeTab.set('tracing')"
+      >
+        <span class="tab-pip pip--tracing"></span>
+        Injection tracing
+      </button>
+    </div>
+
+    @if (activeTab() === 'hierarchy') {
+      <div class="tab-pane">
+        <p class="tab-desc">
+          Angular builds a <strong>tree of injectors</strong>. When you request a token,
+          Angular walks up from your component's injector until it finds a provider.
+          The diagram below shows the typical hierarchy.
+        </p>
+        <app-injector-hierarchy-chart />
+      </div>
+    }
+
+    @if (activeTab() === 'scope') {
+      <div class="tab-pane">
+        <p class="tab-desc">
+          Where you register a provider determines <strong>who can see it</strong>.
+          Root providers are shared app-wide; component providers are visible only to that component and its descendants.
+        </p>
+        <app-provider-scope-view />
+      </div>
+    }
+
+    @if (activeTab() === 'resolution') {
+      <div class="tab-pane">
+        <p class="tab-desc">
+          When a component calls <code>inject(MyService)</code>, Angular searches the injector hierarchy
+          from bottom to top. Click <strong>Resolve</strong> to see the step-by-step lookup.
+        </p>
+        <app-token-resolution-view />
+      </div>
+    }
+
+    @if (activeTab() === 'tracing') {
+      <div class="tab-pane">
+        <p class="tab-desc">
+          A live demo: the component below injects a service. Watch the trace log to see
+          exactly when and where the instance is created and returned.
+        </p>
+        <app-injection-tracing-view />
+      </div>
+    }
+  </div>
+
+  <div class="lab-sidebar-wrapper">
+    <app-di-explorer-concepts-sidebar [activeTab]="activeTab()" />
+  </div>
+</div>

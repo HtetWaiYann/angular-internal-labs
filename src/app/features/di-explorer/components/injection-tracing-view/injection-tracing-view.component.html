@@ -1,0 +1,38 @@
+<div class="tracing-panel">
+  <div class="tracing-demo">
+    <div class="tracing-live">
+      <span class="live-label">Live component</span>
+      <app-di-tracing-demo />
+    </div>
+
+    <div class="tracing-log">
+      <div class="log-header">
+        <span class="live-label">Injection trace</span>
+        <button class="clear-btn" (click)="traceService.clear()">↺ Clear</button>
+      </div>
+      <div class="log-panel">
+        @for (entry of trace(); track entry.id) {
+          <div class="log-row log-row--{{ entry.type }}">
+            <span class="log-time">+{{ entry.time.toFixed(3) }}s</span>
+            <span class="log-msg">{{ entry.message }}</span>
+          </div>
+        } @empty {
+          <div class="log-empty">
+            The component below injects DemoLoggerService. Interact with it to see the trace.
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="tracing-code">
+    <div class="code-topbar"><span class="code-filename">di-tracing-demo.component.ts</span></div>
+    <pre class="code-pre">export class DiTracingDemoComponent &#123;
+  private readonly logger = inject(DemoLoggerService);
+
+  constructor() &#123;
+    this.logger.log('Hello from DI!');
+  &#125;
+&#125;</pre>
+  </div>
+</div>

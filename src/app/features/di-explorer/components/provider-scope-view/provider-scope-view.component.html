@@ -1,0 +1,34 @@
+<div class="scope-panel">
+  <div class="scope-grid">
+    @for (item of scopes; track item.scope) {
+      <div class="scope-card scope-card--{{ item.color }}">
+        <div class="scope-header">
+          <span class="scope-pip scope-pip--{{ item.color }}"></span>
+          <code class="scope-name">{{ item.scope }}</code>
+        </div>
+        <div class="scope-row">
+          <span class="scope-label">Where</span>
+          <span class="scope-value">{{ item.where }}</span>
+        </div>
+        <div class="scope-row">
+          <span class="scope-label">Who sees it</span>
+          <span class="scope-value">{{ item.whoSees }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="scope-code">
+    <div class="code-topbar"><span class="code-filename">Example</span></div>
+    <pre class="code-pre">// Root — one instance for the whole app
+&#64;Injectable(&#123; providedIn: 'root' &#125;)
+class LoggerService &#123; &#125;
+
+// Component — new instance per component, visible to children
+&#64;Component(&#123;
+  providers: [UserPreferencesService],
+  ...
+&#125;)
+class SettingsComponent &#123; &#125;</pre>
+  </div>
+</div>

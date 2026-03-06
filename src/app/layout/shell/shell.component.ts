@@ -62,7 +62,7 @@ export class ShellComponent {
     {
       label: 'DI Explorer',
       route: '/di',
-      available: false,
+      available: true,
       description: 'Injector hierarchy',
     },
     {

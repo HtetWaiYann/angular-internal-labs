@@ -1,0 +1,53 @@
+<div class="resolution-panel">
+  <div class="resolution-demo">
+    <div class="resolution-code">
+      <div class="code-topbar">
+        <span class="code-filename">MyComponent</span>
+        <button
+          class="run-btn run-btn--resolution"
+          (click)="resolve()"
+          [disabled]="isResolving()"
+        >
+          {{ isResolving() ? 'Resolving…' : '▶ Resolve' }}
+        </button>
+        @if (resolutionComplete()) {
+          <button class="reset-btn" (click)="reset()">↺ Reset</button>
+        }
+      </div>
+      <pre class="code-pre">constructor() &#123;
+  this.logger = inject(LoggerService);
+  // Angular looks: Component → Env → Root → … → Null
+&#125;</pre>
+    </div>
+
+    <div class="resolution-steps">
+      <span class="live-label">Lookup path for LoggerService</span>
+      <div class="steps-list">
+        @for (s of displaySteps(); track s.injector) {
+          <div
+            class="step-row"
+            [class.step-row--active]="s.isActive"
+            [class.step-row--past]="s.isPast"
+            [class.step-row--current]="s.isCurrent"
+          >
+            <span class="step-arrow">→</span>
+            <span class="step-injector">{{ s.injector }}</span>
+            @if (s.isActive || s.isPast) {
+              <span class="step-detail" [class.step-detail--found]="s.found">
+                {{ s.detail }}
+              </span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="resolution-note">
+    <span class="note-icon">💡</span>
+    <span>
+      Angular always starts at the <strong>requesting component's injector</strong> and walks up.
+      If no provider is found all the way to NullInjector, you get <code>NullInjectorError</code>.
+    </span>
+  </div>
+</div>

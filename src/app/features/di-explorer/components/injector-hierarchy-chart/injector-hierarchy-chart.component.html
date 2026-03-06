@@ -1,0 +1,17 @@
+<div class="chart-panel">
+  <div class="chart-header">
+    <span class="chart-label">Injector tree — lookup walks from child → parent</span>
+    <span class="chart-hint">Hover a node to highlight its ancestors</span>
+  </div>
+  <div
+    echarts
+    [options]="chartOption()"
+    class="chart-container"
+  ></div>
+  <div class="chart-legend">
+    <span class="legend-item"><span class="legend-dot legend--null"></span> NullInjector (throws if not found)</span>
+    <span class="legend-item"><span class="legend-dot legend--platform"></span> Platform (browser, etc.)</span>
+    <span class="legend-item"><span class="legend-dot legend--root"></span> Root (app-wide providers)</span>
+    <span class="legend-item"><span class="legend-dot legend--component"></span> Component (scoped providers)</span>
+  </div>
+</div>

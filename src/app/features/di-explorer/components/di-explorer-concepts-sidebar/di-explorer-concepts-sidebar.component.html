@@ -1,0 +1,105 @@
+<aside class="concepts-sidebar">
+  <h2 class="sidebar-title">Concepts</h2>
+
+  @if (activeTab() === 'hierarchy') {
+    <section class="concept-block">
+      <h3 class="concept-heading">What is an injector?</h3>
+      <p class="concept-body">
+        An injector is a container that holds <strong>providers</strong> and can create instances.
+        Angular builds a tree of injectors: NullInjector → Platform → Root → … → Component.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Lookup direction</h3>
+      <p class="concept-body">
+        When you call <code>inject(MyService)</code>, Angular starts at your component's injector
+        and walks <strong>up</strong> to the parent until it finds a provider. If it reaches
+        NullInjector without finding one, you get <code>NullInjectorError</code>.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Child inherits parent</h3>
+      <p class="concept-body">
+        A component can inject anything its ancestors provide. A root provider is visible
+        to every component in the app.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'scope') {
+    <section class="concept-block">
+      <h3 class="concept-heading">providedIn: "root"</h3>
+      <p class="concept-body">
+        Registers the service in the <strong>RootInjector</strong>. One instance for the
+        entire app. Tree-shakeable: if no one injects it, it won't be in the bundle.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">providers: [...]</h3>
+      <p class="concept-body">
+        Registers in the component's injector. A <strong>new instance</strong> per component
+        (unless you use a different scope). Visible only to that component and its descendants.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Multiple instances</h3>
+      <p class="concept-body">
+        If you put a service in a component's <code>providers</code>, each instance of that
+        component gets its own service instance. Children share the parent's instance.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'resolution') {
+    <section class="concept-block">
+      <h3 class="concept-heading">Token = key</h3>
+      <p class="concept-body">
+        A token is what you pass to <code>inject()</code> — usually a class. Angular uses
+        it as a key to find the right provider in the injector tree.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Resolution steps</h3>
+      <ol class="concept-list">
+        <li>Start at the requesting component's injector</li>
+        <li>Check if this injector has a provider for the token</li>
+        <li>If not, go to parent injector and repeat</li>
+        <li>If found, create instance (or return existing) and return</li>
+      </ol>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Singleton vs per-component</h3>
+      <p class="concept-body">
+        Root providers create <strong>one</strong> instance. Component providers create
+        one per component instance. The first injection creates it; later injections reuse it.
+      </p>
+    </section>
+  }
+
+  @if (activeTab() === 'tracing') {
+    <section class="concept-block">
+      <h3 class="concept-heading">When does injection happen?</h3>
+      <p class="concept-body">
+        When Angular creates a component, it runs the constructor and field initializers.
+        <code>inject(MyService)</code> runs at that moment — synchronously. The service
+        is created on first request and cached.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">inject() vs constructor</h3>
+      <p class="concept-body">
+        <code>inject(MyService)</code> can be used in field initializers and <code>inject()</code>
+        function. Constructor injection <code>constructor(private s: MyService)</code> is equivalent
+        — both use the same injector.
+      </p>
+    </section>
+    <section class="concept-block">
+      <h3 class="concept-heading">Where to inject</h3>
+      <p class="concept-body">
+        Use <code>inject()</code> in: constructors, field initializers, <code>runInjectionContext</code>.
+        Do not use it in: lifecycle hooks, event handlers, or async callbacks — the injection
+        context is gone there.
+      </p>
+    </section>
+  }
+</aside>
