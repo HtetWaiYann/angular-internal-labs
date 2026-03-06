@@ -8,37 +8,38 @@
       </p>
     </header>
 
-    <!-- ── Lifecycle pipeline (static — always fully lit) ─────────── -->
+    <!-- ── Lifecycle pipeline (animated — 2 s per step replay) ─────── -->
+    @let ps = displayPipeline();
     <div class="pipeline">
-      <div class="pipeline-step pipeline-step--hit">
+      <div [class]="stepClass(ps.start)">
         <div class="pipeline-dot"></div>
         <div class="pipeline-label">Start</div>
       </div>
 
-      <div class="pipeline-line pipeline-line--hit"></div>
+      <div [class]="lineClass(ps.start)"></div>
 
-      <div class="pipeline-step pipeline-step--hit">
+      <div [class]="stepClass(ps.recognized)">
         <div class="pipeline-dot"></div>
         <div class="pipeline-label">Recognized</div>
       </div>
 
-      <div class="pipeline-line pipeline-line--hit"></div>
+      <div [class]="lineClass(ps.recognized)"></div>
 
-      <div class="pipeline-step pipeline-step--guard pipeline-step--hit">
+      <div [class]="stepClass(ps.guards, 'pipeline-step--guard')">
         <div class="pipeline-dot"></div>
         <div class="pipeline-label">Guards</div>
       </div>
 
-      <div class="pipeline-line pipeline-line--hit"></div>
+      <div [class]="lineClass(ps.guards)"></div>
 
-      <div class="pipeline-step pipeline-step--resolve pipeline-step--hit">
+      <div [class]="stepClass(ps.resolve, 'pipeline-step--resolve')">
         <div class="pipeline-dot"></div>
         <div class="pipeline-label">Resolve</div>
       </div>
 
-      <div class="pipeline-line pipeline-line--hit"></div>
+      <div [class]="lineClass(ps.resolve)"></div>
 
-      <div class="pipeline-step pipeline-step--hit">
+      <div [class]="stepClass(ps.end)">
         <div class="pipeline-dot"></div>
         <div class="pipeline-label">End</div>
       </div>
@@ -65,14 +66,15 @@
       <div class="tab-pane">
         <p class="tab-desc">
           Subscribe to <code>Router.events</code> to observe every navigation.
-          Each navigation follows the same sequence: NavigationStart → RoutesRecognized →
-          GuardsCheckStart/End → ResolveStart/End → NavigationEnd.
-          Steps that are not needed (no guard, no resolver) are simply skipped.
+          Each navigation follows the same sequence: <strong>Start</strong> → <strong>Recognized</strong> →
+          <strong>Guards</strong> (if any) → <strong>Resolve</strong> (if any) → <strong>End</strong>.
+          The waterfall below shows when each phase runs and how long it takes.
         </p>
 
-        <!-- Last nav summary -->
+        <!-- Last completed nav summary -->
         @if (state.lastNavSummary(); as s) {
           <div class="nav-summary" [class.nav-summary--cancelled]="s.outcome === 'cancelled'" [class.nav-summary--error]="s.outcome === 'error'">
+            <span class="ns-label">Last completed:</span>
             <span class="ns-id">Nav #{{ s.navId }}</span>
             <span class="ns-sep">·</span>
             <span class="ns-url">{{ s.url }}</span>
@@ -107,11 +109,11 @@
         <!-- Event log -->
         <div class="log-section">
           <div class="log-header">
-            <span class="live-label">Events — current navigation</span>
+            <span class="live-label">Events — Nav #{{ state.displayNavId() || '—' }}</span>
             <button class="clear-btn" (click)="clearAll()">↺ Clear</button>
           </div>
           <div class="log-panel log-panel--lg">
-            @for (entry of state.currentNavTimeline(); track entry.id) {
+            @for (entry of state.displayTimeline(); track entry.id) {
               <div class="log-row log-row--{{ entry.type }}">
                 <span class="log-elapsed">+{{ entry.elapsed.toFixed(1) }}ms</span>
                 <span class="log-event">{{ entry.label }}</span>
@@ -126,6 +128,16 @@
             }
           </div>
         </div>
+
+        <!-- Gantt waterfall -->
+        @if (state.displayTimeline().length) {
+          <div class="log-section">
+            <span class="live-label">Navigation waterfall — Nav #{{ state.displayNavId() || '—' }}</span>
+            <div class="gantt-panel">
+              <app-nav-gantt [timeline]="state.displayTimeline()" />
+            </div>
+          </div>
+        }
       </div>
     }
 
