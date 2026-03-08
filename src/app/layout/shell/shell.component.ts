@@ -66,12 +66,6 @@ export class ShellComponent {
       description: 'Injector hierarchy',
     },
     {
-      label: 'Performance',
-      route: '/performance',
-      available: false,
-      description: 'Profiler + bottleneck detection',
-    },
-    {
       label: 'Replay Engine',
       route: '/replay',
       available: false,

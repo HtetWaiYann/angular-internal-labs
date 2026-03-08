@@ -90,6 +90,33 @@
         <button class="reset-btn" (click)="resetDefault()">↺ Reset</button>
       </div>
 
+      <div class="code-block">
+        <div class="code-topbar">
+          <span class="code-filename">runOutsideAngular.ts</span>
+          <button class="run-btn run-btn--ghost" (click)="runOutsideAngular()">
+            Run outside Angular
+          </button>
+        </div>
+        <pre class="code-pre">{{ outsideCode }}</pre>
+      </div>
+
+      <p class="tab-desc">
+        <strong>runOutsideAngular</strong> lets you do expensive work without firing change detection
+        on every micro-step. Do the heavy work outside Angular, then call <code>run()</code> once to
+        tell Angular to update the UI.
+      </p>
+
+      <div class="live-area">
+        <span class="live-label">Outside Angular run</span>
+        <div class="status">
+          <span>Runs: {{ outsideRuns() }}</span>
+          <span style="margin-left: 0.75rem;">Last duration: {{ outsideDurationMs() }} ms</span>
+        </div>
+        @if (outsideMsg(); as note) {
+          <div class="status status--skipped">{{ note }}</div>
+        }
+      </div>
+
     </div>
   }
 

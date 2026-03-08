@@ -49,28 +49,6 @@ Interactive platform that visualizes Angular internals such as change detection,
 - Token resolution tracker
 - Injection tracing
 
-### Performance Profiler
-- Change detection/sec
-- Render time
-- Memory estimate
-- Active subscriptions
-- Signal recompute frequency
-- Bottleneck detection
-
-### Execution Replay Engine
-Records sessions and allows replay with:
-- play/pause
-- timeline scrubber
-- step navigation
-
-### DevTools Panel
-- Event log
-- Inspector
-- Component explorer
-- Signal inspector
-- RxJS inspector
-- Router inspector
-
 ### Teaching Mode
 Explains what happened and why.
 

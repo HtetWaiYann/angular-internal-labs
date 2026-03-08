@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, NgZone } from '@angular/core';
 import { CdLabStateService } from './services/cd-lab-state.service';
 import { DefaultCdComponent } from './components/default-cd/default-cd.component';
 import { OnPushCdComponent } from './components/onpush-cd/onpush-cd.component';
@@ -29,6 +29,7 @@ const IDLE_TREE: CdTreeState = { default: 'idle', onpush: 'idle', signal: 'idle'
   styleUrl: './change-detection-lab.component.css',
 })
 export class ChangeDetectionLabComponent {
+  private readonly ngZone = inject(NgZone);
   readonly labState = inject(CdLabStateService);
 
   readonly activeTab = signal<Tab>('default');
@@ -42,6 +43,16 @@ export class ChangeDetectionLabComponent {
   readonly defaultValue = signal(0);
   readonly defaultFlash = signal(0);
   readonly defaultMsg = signal<Msg | null>(null);
+  readonly outsideRuns = signal(0);
+  readonly outsideDurationMs = signal(0);
+  readonly outsideMsg = signal<string | null>(null);
+  readonly outsideCode =
+    `// Skip Angular change detection while doing heavy work\n` +
+    `this.ngZone.runOutsideAngular(() => {\n` +
+    `  heavyWork(); // expensive loop — no CD runs here\n` +
+    `  // Re-enter Angular once to update the UI\n` +
+    `  this.ngZone.run(() => this.status = 'done');\n` +
+    `});`;
 
   // ── OnPush tab ────────────────────────────────────────────────────────────
   readonly onpushRenders = signal(0);
@@ -128,6 +139,27 @@ export class ChangeDetectionLabComponent {
     this.defaultValue.set(0);
     this.defaultFlash.set(0);
     this.defaultMsg.set(null);
+    this.outsideRuns.set(0);
+    this.outsideDurationMs.set(0);
+    this.outsideMsg.set(null);
+  }
+
+  runOutsideAngular(): void {
+    const started = performance.now();
+    this.ngZone.runOutsideAngular(() => {
+      const end = started + 40;
+      while (performance.now() < end) {
+        // simulate heavy work
+      }
+    });
+    const elapsed = Math.round((performance.now() - started) * 100) / 100;
+    this.ngZone.run(() => {
+      this.outsideRuns.update((v) => v + 1);
+      this.outsideDurationMs.set(elapsed);
+      this.outsideMsg.set(
+        `Ran a ~${elapsed}ms loop outside Angular. Change detection ran only once when re-entering.`,
+      );
+    });
   }
 
   // ── OnPush actions ────────────────────────────────────────────────────────

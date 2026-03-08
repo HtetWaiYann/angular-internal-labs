@@ -86,13 +86,6 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'performance',
-        loadComponent: () =>
-          import('./features/performance/performance-placeholder.component').then(
-            (m) => m.PerformancePlaceholderComponent,
-          ),
-      },
-      {
         path: 'replay',
         loadComponent: () =>
           import('./features/replay/replay-placeholder.component').then(
