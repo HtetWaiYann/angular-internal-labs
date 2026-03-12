@@ -7,11 +7,12 @@
           class="run-btn run-btn--resolution"
           (click)="resolve()"
           [disabled]="isResolving()"
+          appTooltip="Step through the injector lookup: Component → Environment → Root."
         >
           {{ isResolving() ? 'Resolving…' : '▶ Resolve' }}
         </button>
         @if (resolutionComplete()) {
-          <button class="reset-btn" (click)="reset()">↺ Reset</button>
+          <button class="reset-btn" (click)="reset()" appTooltip="Reset the resolution demo.">↺ Reset</button>
         }
       </div>
       <pre class="code-pre">constructor() &#123;

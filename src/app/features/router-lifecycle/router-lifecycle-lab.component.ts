@@ -1,5 +1,6 @@
 import { Component, OnDestroy, effect, inject, signal, untracked } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { TooltipDirective } from '../../shared/directives/tooltip';
 import {
   RouterLifecycleStateService,
   PhaseStatus,
@@ -19,7 +20,7 @@ const STEP_DELAY = 2000; // ms between each pipeline step lighting up
 
 @Component({
   selector: 'app-router-lifecycle-lab',
-  imports: [RouterOutlet, RouterLink, RouterLifecycleConceptsSidebarComponent, NavGanttComponent],
+  imports: [RouterOutlet, RouterLink, RouterLifecycleConceptsSidebarComponent, NavGanttComponent, TooltipDirective],
   templateUrl: './router-lifecycle-lab.component.html',
   styleUrl: './router-lifecycle-lab.component.css',
 })

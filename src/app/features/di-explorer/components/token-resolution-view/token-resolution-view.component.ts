@@ -1,4 +1,5 @@
 import { Component, signal, computed } from '@angular/core';
+import { TooltipDirective } from '../../../../shared/directives/tooltip';
 
 interface ResolutionStep {
   injector: string;
@@ -8,6 +9,8 @@ interface ResolutionStep {
 
 @Component({
   selector: 'app-token-resolution-view',
+  standalone: true,
+  imports: [TooltipDirective],
   templateUrl: './token-resolution-view.component.html',
   styleUrl: './token-resolution-view.component.css',
 })

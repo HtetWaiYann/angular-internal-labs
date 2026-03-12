@@ -48,7 +48,7 @@
         <div class="code-block">
           <div class="code-topbar">
             <span class="code-filename">effect-demo.ts</span>
-            <button class="run-btn run-btn--signal" (click)="state.incrementForEffect()">
+            <button class="run-btn run-btn--signal" (click)="state.incrementForEffect()" appTooltip="Increment the source signal. The effect runs and logs each time.">
               ▶ Increment
             </button>
           </div>
@@ -72,7 +72,7 @@
           <div class="live-stats">
             <span class="stat-inline">source = {{ state.sourceForEffect() }}</span>
           </div>
-          <button class="reset-btn" (click)="state.clearEffectLog()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearEffectLog()" appTooltip="Clear the effect log and reset source.">↺ Reset</button>
         </div>
       </div>
     }
@@ -82,7 +82,7 @@
         <div class="code-block">
           <div class="code-topbar">
             <span class="code-filename">batching-demo.ts</span>
-            <button class="run-btn run-btn--signal" (click)="state.updateBothInSameTick()">
+            <button class="run-btn run-btn--signal" (click)="state.updateBothInSameTick()" appTooltip="Update both signals in the same synchronous block. Effect runs once (batched).">
               ▶ Update both
             </button>
           </div>
@@ -107,7 +107,7 @@
             <span class="stat-inline">a = {{ state.batchA() }}</span>
             <span class="stat-inline">b = {{ state.batchB() }}</span>
           </div>
-          <button class="reset-btn" (click)="state.clearBatchLog()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearBatchLog()" appTooltip="Clear the batch log and reset signals.">↺ Reset</button>
         </div>
       </div>
     }
@@ -117,7 +117,7 @@
         <div class="code-block">
           <div class="code-topbar">
             <span class="code-filename">computed-demo.ts</span>
-            <button class="run-btn run-btn--signal" (click)="state.incrementForComputed()">
+            <button class="run-btn run-btn--signal" (click)="state.incrementForComputed()" appTooltip="Increment the source signal. Computed recalculates and the effect runs.">
               ▶ Increment source
             </button>
           </div>
@@ -142,7 +142,7 @@
             <span class="stat-inline">source = {{ state.sourceForComputed() }}</span>
             <span class="stat-inline">doubled = {{ state.computedFromSource() }}</span>
           </div>
-          <button class="reset-btn" (click)="state.clearComputedLog()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearComputedLog()" appTooltip="Clear the computed log and reset source.">↺ Reset</button>
         </div>
       </div>
     }
@@ -153,10 +153,10 @@
           <div class="code-topbar">
             <span class="code-filename">mutation-demo.ts</span>
             <div class="run-group">
-              <button class="run-btn run-btn--ghost" (click)="state.mutateArray()">
+              <button class="run-btn run-btn--ghost" (click)="state.mutateArray()" appTooltip="Push to the array in place. Same reference — signal does not notify. Effect may not run.">
                 Mutate (push)
               </button>
-              <button class="run-btn run-btn--signal" (click)="state.updateArrayImmutable()">
+              <button class="run-btn run-btn--signal" (click)="state.updateArrayImmutable()" appTooltip="Return a new array with spread. New reference — signal notifies. Effect runs.">
                 Immutable (spread)
               </button>
             </div>
@@ -184,7 +184,7 @@
               </div>
             </div>
           </div>
-          <button class="reset-btn" (click)="state.clearMutationDemo()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearMutationDemo()" appTooltip="Reset both arrays to initial state.">↺ Reset</button>
         </div>
       </div>
     }

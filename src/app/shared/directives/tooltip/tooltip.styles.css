@@ -1,0 +1,34 @@
+.app-tooltip {
+  position: fixed;
+  z-index: 10000;
+  max-width: 320px;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--text-primary);
+  background: linear-gradient(180deg, #1a1a24 0%, #14141c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px) scale(0.98);
+  transition:
+    opacity 0.22s cubic-bezier(0.32, 0.72, 0, 1),
+    transform 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.app-tooltip.tooltip-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.app-tooltip.tooltip-below {
+  transform: translateY(-6px) scale(0.98);
+}
+
+.app-tooltip.tooltip-below.tooltip-visible {
+  transform: translateY(0) scale(1);
+}

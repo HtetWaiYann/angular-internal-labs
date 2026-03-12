@@ -55,3 +55,6 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+/* App tooltip (custom directive) */
+@import './app/shared/directives/tooltip/tooltip.styles.css';

@@ -99,10 +99,10 @@
         <div class="trigger-row">
           <span class="trigger-label">Navigate to:</span>
           <div class="trigger-buttons">
-            <a routerLink="/router/timeline" class="trig-btn">Plain</a>
-            <a routerLink="/router/guarded" class="trig-btn trig-btn--guard">+ Guard</a>
-            <a routerLink="/router/resolved" class="trig-btn trig-btn--resolve">+ Resolver</a>
-            <a routerLink="/router/lazy" class="trig-btn trig-btn--lazy">Lazy chunk</a>
+            <a routerLink="/router/timeline" class="trig-btn" appTooltip="Navigate to a plain route. No guards or resolvers.">Plain</a>
+            <a routerLink="/router/guarded" class="trig-btn trig-btn--guard" appTooltip="Navigate to a route with canActivate guard. Guard runs before the component loads.">+ Guard</a>
+            <a routerLink="/router/resolved" class="trig-btn trig-btn--resolve" appTooltip="Navigate to a route with resolver. Data is fetched before the component loads.">+ Resolver</a>
+            <a routerLink="/router/lazy" class="trig-btn trig-btn--lazy" appTooltip="Navigate to a lazy-loaded route. Chunk loads on first visit.">Lazy chunk</a>
           </div>
         </div>
 
@@ -110,7 +110,7 @@
         <div class="log-section">
           <div class="log-header">
             <span class="live-label">Events — Nav #{{ state.displayNavId() || '—' }}</span>
-            <button class="clear-btn" (click)="clearAll()">↺ Clear</button>
+            <button class="clear-btn" (click)="clearAll()" appTooltip="Clear the event log and reset the displayed navigation.">↺ Clear</button>
           </div>
           <div class="log-panel log-panel--lg">
             @for (entry of state.displayTimeline(); track entry.id) {
@@ -171,10 +171,11 @@
                 class="delay-btn"
                 [class.delay-btn--active]="config.guardDelayMs() === d"
                 (click)="setGuardDelay(d)"
+                [appTooltip]="d === 0 ? 'No delay — guard returns immediately.' : 'Simulate async guard that takes ' + d + 'ms.'"
               >{{ d === 0 ? 'None' : d + 'ms' }}</button>
             }
           </div>
-          <a routerLink="/router/guarded" class="trig-btn trig-btn--guard">Navigate to guarded route</a>
+          <a routerLink="/router/guarded" class="trig-btn trig-btn--guard" appTooltip="Navigate to the guarded route. The guard runs with the selected delay.">Navigate to guarded route</a>
         </div>
 
         <div class="log-section">
@@ -228,10 +229,11 @@ constructor(private route: ActivatedRoute) &#123;
                 class="delay-btn"
                 [class.delay-btn--active]="config.resolverDelayMs() === d"
                 (click)="setResolverDelay(d)"
+                [appTooltip]="d === 0 ? 'No delay — resolver returns immediately.' : 'Simulate slow API that takes ' + d + 'ms.'"
               >{{ d === 0 ? 'None' : d + 'ms' }}</button>
             }
           </div>
-          <a routerLink="/router/resolved" class="trig-btn trig-btn--resolve">Navigate to resolved route</a>
+          <a routerLink="/router/resolved" class="trig-btn trig-btn--resolve" appTooltip="Navigate to the resolved route. The resolver fetches data with the selected delay.">Navigate to resolved route</a>
         </div>
 
         <div class="log-section">
@@ -288,7 +290,7 @@ constructor(private route: ActivatedRoute) &#123;
         </div>
 
         <div class="trigger-row">
-          <a routerLink="/router/lazy" class="trig-btn trig-btn--lazy">Navigate to lazy route</a>
+          <a routerLink="/router/lazy" class="trig-btn trig-btn--lazy" appTooltip="First visit loads the chunk. Revisit uses the cached module.">Navigate to lazy route</a>
         </div>
 
         <div class="log-section">

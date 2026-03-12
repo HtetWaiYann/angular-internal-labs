@@ -1,0 +1,46 @@
+<aside class="concepts-sidebar">
+  <h2 class="sidebar-title">Concepts</h2>
+  <p class="sidebar-intro">
+    Why <code>track</code> matters for list performance in Angular.
+  </p>
+
+  <section class="concept-block">
+    <h3 class="concept-heading">What does track do?</h3>
+    <p class="concept-body">
+      In <code>&#64;for (item of items(); track expr)</code>, the <code>track</code> expression gives each item a <strong>stable identity</strong>.
+      Angular uses it to decide: "Is this the same item as before, or a different one?" Same identity → reuse the existing DOM node. Different identity → destroy the old node and create a new one.
+    </p>
+  </section>
+
+  <section class="concept-block">
+    <h3 class="concept-heading">track item (object reference)</h3>
+    <p class="concept-body">
+      Using <code>track item</code> uses the object <strong>reference</strong> as identity.
+      When you refetch data from a server, you get new objects (same data, new refs). Angular sees "new identity" for every item and destroys/recreates all nodes. This is expensive.
+    </p>
+  </section>
+
+  <section class="concept-block">
+    <h3 class="concept-heading">track item.id: stable identity</h3>
+    <p class="concept-body">
+      With <code>track item.id</code>, Angular uses a <strong>stable</strong> identifier that survives refetches.
+      When you get new objects from the server (same ids), Angular reuses existing DOM nodes and updates bindings. No destroy/create. Much cheaper.
+    </p>
+  </section>
+
+  <section class="concept-block">
+    <h3 class="concept-heading">When to use trackBy</h3>
+    <p class="concept-body">
+      Use a stable <code>track</code> expression whenever your list can <strong>reorder</strong>, <strong>add</strong>, or <strong>remove</strong> items.
+      Static lists that never change may not need it, but it's a good habit. Use a unique id or a composite key (e.g. <code>track item.id</code> or <code>track item.category + item.id</code>).
+    </p>
+  </section>
+
+  <section class="concept-block">
+    <h3 class="concept-heading">Performance impact</h3>
+    <p class="concept-body">
+      Destroying and recreating DOM nodes is expensive: component lifecycle (constructor, ngOnInit, etc.), DOM allocation, and style recalculation.
+      Reusing nodes avoids all of that. In long lists with frequent updates, the difference is dramatic.
+    </p>
+  </section>
+</aside>

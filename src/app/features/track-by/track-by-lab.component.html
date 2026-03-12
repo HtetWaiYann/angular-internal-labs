@@ -1,0 +1,114 @@
+<div class="lab-layout">
+  <div class="lab-main">
+    <header class="lab-header">
+      <h1 class="lab-title">TrackBy Lab</h1>
+      <p class="lab-desc">
+        See how <code>track</code> in <code>&#64;for</code> affects DOM reuse.
+        Without a stable identity, Angular destroys and recreates list items on every change.
+        With <code>track item.id</code>, it reuses existing DOM nodes when items move or update.
+      </p>
+    </header>
+
+    <div class="track-by-actions">
+      <button class="run-btn run-btn--trackby" (click)="addItem()" appTooltip="Add a new item to the end of the list. Both lists create one new component instance.">
+        ▶ Add item
+      </button>
+      <button class="run-btn run-btn--trackby" (click)="reorder()" appTooltip="Move the first item to the end. Same object refs in a new order — both lists reuse views.">
+        ▶ Reorder
+      </button>
+      <button class="run-btn run-btn--trackby" (click)="updateFirst()" appTooltip="Change the first item's name (creates a new object reference). Without trackBy: 1 new creation. With trackBy: 0.">
+        ▶ Update first
+      </button>
+      <button class="run-btn run-btn--trackby" (click)="refresh()" appTooltip="Replace the array with new objects — same data, new memory refs. Simulates refetching from a server. Without trackBy: all items recreated. With trackBy: none.">
+        ▶ Refresh (new refs)
+      </button>
+      <button class="reset-btn" (click)="reset()" appTooltip="Clear creation counters and restore the initial list.">↺ Reset</button>
+    </div>
+
+    @if (lastAction(); as action) {
+      <div class="track-by-insight">
+        @if (action === 'add') {
+          <p>Adding an item creates one new list entry. Both lists create one new component instance.</p>
+        }
+        @if (action === 'reorder') {
+          <p><strong>Without trackBy</strong> (<code>track item</code>): Reordering changes which object is at each position. Same object refs in a new order — Angular reuses views. <strong>With trackBy</strong> (<code>track item.id</code>): Same — Angular moves existing DOM nodes. Both reuse; the difference shows when you <strong>Refresh</strong>.</p>
+        }
+        @if (action === 'update') {
+          <p><strong>Without trackBy</strong>: The first item gets a new object reference. With <code>track item</code>, that's a new identity — one new creation. <strong>With trackBy</strong>: Same <code>item.id</code> — Angular reuses the view and updates the binding. No new creation.</p>
+        }
+        @if (action === 'refresh') {
+          <p><strong>Without trackBy</strong> (<code>track item</code>): The array is replaced with new objects (same data, new refs). Every item has a new identity — Angular destroys all and creates new ones. <strong>With trackBy</strong> (<code>track item.id</code>): Same ids — Angular reuses all views and updates bindings. No new creations.</p>
+        }
+      </div>
+    }
+
+    <div class="track-by-compare">
+      <div class="track-by-column track-by-column--bad">
+        <div class="track-by-column-header">
+          <span class="track-by-column-label">Without trackBy</span>
+          <span class="track-by-column-hint">track item (object reference)</span>
+        </div>
+        <div class="track-by-metrics">
+          <span class="track-by-metric track-by-metric--bad">
+            DOM creations: {{ state.noTrackCreations() }}
+          </span>
+        </div>
+        <div class="code-block track-by-code">
+          <div class="code-topbar">
+            <span class="code-filename">template.html</span>
+          </div>
+          <pre class="code-pre">&#64;for (item of items(); track item) &#123;
+  &lt;app-item [item]="item" /&gt;
+&#125;</pre>
+        </div>
+        <div class="track-by-list">
+          <span class="live-label">Live list</span>
+          @for (item of state.items(); track item) {
+            <app-track-by-list-item [item]="item" listId="no-track" />
+          }
+        </div>
+      </div>
+
+      <div class="track-by-column track-by-column--good">
+        <div class="track-by-column-header">
+          <span class="track-by-column-label">With trackBy</span>
+          <span class="track-by-column-hint">track item.id (identity-based)</span>
+        </div>
+        <div class="track-by-metrics">
+          <span class="track-by-metric track-by-metric--good">
+            DOM creations: {{ state.withTrackCreations() }}
+          </span>
+        </div>
+        <div class="code-block track-by-code">
+          <div class="code-topbar">
+            <span class="code-filename">template.html</span>
+          </div>
+          <pre class="code-pre">&#64;for (item of items(); track item.id) &#123;
+  &lt;app-item [item]="item" /&gt;
+&#125;</pre>
+        </div>
+        <div class="track-by-list">
+          <span class="live-label">Live list</span>
+          @for (item of state.items(); track item.id) {
+            <app-track-by-list-item [item]="item" listId="with-track" />
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="track-by-legend">
+      <div class="track-by-legend-item">
+        <span class="track-by-legend-badge track-by-legend-badge--new">NEW</span>
+        <span>Component instance was just created (DOM node added)</span>
+      </div>
+      <div class="track-by-legend-item">
+        <span class="track-by-legend-badge track-by-legend-badge--reused">reused</span>
+        <span>Same instance moved or updated (no DOM recreation)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="lab-sidebar-wrapper">
+    <app-track-by-concepts-sidebar />
+  </div>
+</div>

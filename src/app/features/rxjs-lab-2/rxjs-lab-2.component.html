@@ -40,7 +40,7 @@
         <div class="code-block">
           <div class="code-topbar">
             <span class="code-filename">filter-distinct.ts</span>
-            <button class="run-btn run-btn--signal" (click)="state.runFilterDistinct()">▶ Run</button>
+            <button class="run-btn run-btn--signal" (click)="state.runFilterDistinct()" appTooltip="Run map → filter → distinctUntilChanged. See which values pass through.">▶ Run</button>
           </div>
           <pre class="code-pre">{{ codeFilterDistinct() }}</pre>
         </div>
@@ -53,7 +53,7 @@
               <div class="log-empty">Click Run.</div>
             }
           </div>
-          <button class="reset-btn" (click)="state.clearFilterDistinct()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearFilterDistinct()" appTooltip="Clear the emitted log.">↺ Reset</button>
         </div>
       </div>
     }
@@ -73,8 +73,8 @@
           <div class="code-topbar">
             <span class="code-filename">search.ts</span>
             <div class="run-group">
-              <button class="run-btn run-btn--signal" (click)="state.startSearch()">Start</button>
-              <button class="run-btn run-btn--default" (click)="state.triggerSearch()">▶ Trigger query</button>
+              <button class="run-btn run-btn--signal" (click)="state.startSearch()" appTooltip="Start the search stream. Type a query, then trigger to see debounce + switchMap.">Start</button>
+              <button class="run-btn run-btn--default" (click)="state.triggerSearch()" appTooltip="Emit the current query. debounceTime waits for typing to pause; switchMap cancels previous request.">▶ Trigger query</button>
             </div>
           </div>
           <pre class="code-pre">{{ codeSearch() }}</pre>
@@ -90,7 +90,7 @@
             @for (r of state.searchResults(); track $index) { <div class="log-row"><span class="log-msg">{{ r }}</span></div> }
             @empty { <div class="log-empty">—</div> }
           </div>
-          <button class="reset-btn" (click)="state.clearSearch()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearSearch()" appTooltip="Clear the log and results.">↺ Reset</button>
         </div>
       </div>
     }
@@ -105,7 +105,7 @@
         <div class="code-block">
           <div class="code-topbar">
             <span class="code-filename">catchError.ts</span>
-            <button class="run-btn run-btn--signal" (click)="state.runCatchError()">▶ Run</button>
+            <button class="run-btn run-btn--signal" (click)="state.runCatchError()" appTooltip="Run the stream. Source emits a, b, then errors; catchError returns the fallback so the stream continues.">▶ Run</button>
           </div>
           <pre class="code-pre">{{ codeCatchError() }}</pre>
         </div>
@@ -114,7 +114,7 @@
             @for (line of state.catchErrorLog(); track $index) { <div class="log-row"><span class="log-msg">{{ line }}</span></div> }
             @empty { <div class="log-empty">Click Run.</div> }
           </div>
-          <button class="reset-btn" (click)="state.clearCatchError()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearCatchError()" appTooltip="Clear the log.">↺ Reset</button>
         </div>
       </div>
     }
@@ -126,8 +126,8 @@
           <div class="code-topbar">
             <span class="code-filename">take.ts</span>
             <div class="run-group">
-              <button class="run-btn run-btn--signal" (click)="state.runTakeOne()">take(1)</button>
-              <button class="run-btn run-btn--default" (click)="state.runTakeUntil()">takeUntil (2s)</button>
+              <button class="run-btn run-btn--signal" (click)="state.runTakeOne()" appTooltip="take(1): emit one value then complete. Good for one-off values.">take(1)</button>
+              <button class="run-btn run-btn--default" (click)="state.runTakeUntil()" appTooltip="takeUntil: interval runs until a notifier emits after ~2s. Simulates ngOnDestroy cleanup.">takeUntil (2s)</button>
             </div>
           </div>
           <pre class="code-pre">{{ codeTake }}</pre>
@@ -142,7 +142,7 @@
             @for (line of state.takeUntilLog(); track $index) { <div class="log-row"><span class="log-msg">{{ line }}</span></div> }
             @if (state.takeUntilDestroyed()) { <div class="log-row log-msg">Destroy emitted.</div> }
           </div>
-          <button class="reset-btn" (click)="state.clearTake()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearTake()" appTooltip="Clear both logs.">↺ Reset</button>
         </div>
       </div>
     }
@@ -153,9 +153,9 @@
           <div class="code-topbar">
             <span class="code-filename">combineLatest.ts</span>
             <div class="run-group">
-              <button class="run-btn run-btn--signal" (click)="state.startCombineLatest()">Start</button>
-              <button class="run-btn run-btn--ghost" (click)="state.emitCombineA()">Emit A</button>
-              <button class="run-btn run-btn--ghost" (click)="state.emitCombineB()">Emit B</button>
+              <button class="run-btn run-btn--signal" (click)="state.startCombineLatest()" appTooltip="Start combineLatest. Both sources must emit at least once before combined values flow.">Start</button>
+              <button class="run-btn run-btn--ghost" (click)="state.emitCombineA()" appTooltip="Emit from source A and increment its value.">Emit A</button>
+              <button class="run-btn run-btn--ghost" (click)="state.emitCombineB()" appTooltip="Emit from source B and increment its value.">Emit B</button>
             </div>
           </div>
           <pre class="code-pre">{{ codeCombine() }}</pre>
@@ -167,7 +167,7 @@
             @empty { <div class="log-empty">Start, then Emit A / Emit B.</div> }
           </div>
           <p class="tab-desc">A = {{ state.combineSourceA() }}, B = {{ state.combineSourceB() }} — each button emits and increments.</p>
-          <button class="reset-btn" (click)="state.clearCombine()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearCombine()" appTooltip="Clear the combined log and reset sources.">↺ Reset</button>
         </div>
       </div>
     }
@@ -190,7 +190,7 @@
               <div class="stat-label">Current value (from count$ | async)</div>
               <div class="stat-num">{{ state.count$ | async }}</div>
               <p class="angular-try">Try: click <strong>Increment</strong>. The number updates because the observable emitted a new value.</p>
-              <button class="run-btn run-btn--signal" (click)="state.incrementAsync()">Increment</button>
+              <button class="run-btn run-btn--signal" (click)="state.incrementAsync()" appTooltip="Increment the count. The async pipe subscribes and the template updates.">Increment</button>
             </div>
           </div>
         </section>

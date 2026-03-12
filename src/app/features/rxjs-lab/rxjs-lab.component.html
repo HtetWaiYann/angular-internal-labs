@@ -77,6 +77,7 @@
               class="run-btn run-btn--signal"
               (click)="state.startStream()"
               [disabled]="state.streamRunning()"
+              appTooltip="Start the stream. Values flow through map and filter; each emission appears in the timeline."
             >
               ▶ Start
             </button>
@@ -100,8 +101,8 @@
             }
           </div>
           <div class="run-group">
-            <button class="reset-btn" (click)="state.stopStream()" [disabled]="!state.streamRunning()">Stop</button>
-            <button class="reset-btn" (click)="state.clearStream()">↺ Reset</button>
+            <button class="reset-btn" (click)="state.stopStream()" [disabled]="!state.streamRunning()" appTooltip="Stop the stream and cancel the subscription.">Stop</button>
+            <button class="reset-btn" (click)="state.clearStream()" appTooltip="Clear the timeline and reset.">↺ Reset</button>
           </div>
         </div>
       </div>
@@ -127,6 +128,7 @@
                 class="run-btn run-btn--signal"
                 (click)="state.subscribeLifecycle()"
                 [disabled]="state.isSubscribed()"
+                appTooltip="Subscribe to the stream. Emissions start flowing."
               >
                 Subscribe
               </button>
@@ -134,6 +136,7 @@
                 class="run-btn run-btn--ghost"
                 (click)="state.unsubscribeLifecycle()"
                 [disabled]="!state.isSubscribed()"
+                appTooltip="Unsubscribe and cancel. No more emissions."
               >
                 Unsubscribe
               </button>
@@ -163,7 +166,7 @@
               <div class="log-empty">Subscribe to see emissions.</div>
             }
           </div>
-          <button class="reset-btn" (click)="state.clearLifecycle()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearLifecycle()" appTooltip="Clear the log and reset state.">↺ Reset</button>
         </div>
       </div>
     }
@@ -189,6 +192,7 @@
                 [class.run-btn--signal]="state.concurrencyMode() === 'mergeMap'"
                 [class.run-btn--ghost]="state.concurrencyMode() !== 'mergeMap'"
                 (click)="state.setConcurrencyMode('mergeMap')"
+                appTooltip="mergeMap: run all inner observables in parallel. All complete."
               >
                 mergeMap
               </button>
@@ -197,10 +201,11 @@
                 [class.run-btn--signal]="state.concurrencyMode() === 'switchMap'"
                 [class.run-btn--ghost]="state.concurrencyMode() !== 'switchMap'"
                 (click)="state.setConcurrencyMode('switchMap')"
+                appTooltip="switchMap: cancel previous inner observable when a new one starts. Only latest completes."
               >
                 switchMap
               </button>
-              <button class="run-btn run-btn--default" (click)="state.triggerConcurrency()">
+              <button class="run-btn run-btn--default" (click)="state.triggerConcurrency()" appTooltip="Emit a value to trigger the inner observable. Click quickly to see the difference.">
                 ▶ Trigger
               </button>
             </div>
@@ -222,7 +227,7 @@
               <div class="log-empty">Select mode and click Trigger.</div>
             }
           </div>
-          <button class="reset-btn" (click)="state.clearConcurrency()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearConcurrency()" appTooltip="Clear the emission log.">↺ Reset</button>
         </div>
       </div>
     }
@@ -246,6 +251,7 @@
               class="run-btn run-btn--signal"
               (click)="state.runErrorRetry()"
               [disabled]="state.errorRetryRunning()"
+              appTooltip="Run the stream. It emits 1, 2, then errors. retry resubscribes based on the count."
             >
               ▶ Run
             </button>
@@ -273,7 +279,7 @@
               <div class="log-empty">Click Run to see next / error / retry.</div>
             }
           </div>
-          <button class="reset-btn" (click)="state.clearErrorRetry()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearErrorRetry()" appTooltip="Clear the event log.">↺ Reset</button>
         </div>
       </div>
     }
@@ -294,8 +300,8 @@
           <div class="code-topbar">
             <span class="code-filename">cold-hot-demo.ts</span>
             <div class="run-group">
-              <button class="run-btn run-btn--signal" (click)="state.runCold()">▶ Run cold</button>
-              <button class="run-btn run-btn--default" (click)="state.runHot()">▶ Run hot</button>
+              <button class="run-btn run-btn--signal" (click)="state.runCold()" appTooltip="Cold: each subscriber triggers the producer (runs twice for 2 subscribers).">▶ Run cold</button>
+              <button class="run-btn run-btn--default" (click)="state.runHot()" appTooltip="Hot: share() runs the producer once and multicasts to both subscribers.">▶ Run hot</button>
             </div>
           </div>
           <pre class="code-pre">{{ codeColdHot() }}</pre>
@@ -333,7 +339,7 @@
               </div>
             </div>
           </div>
-          <button class="reset-btn" (click)="state.clearColdHot()">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearColdHot()" appTooltip="Clear the logs and reset producer run counts.">↺ Reset</button>
         </div>
       </div>
     }

@@ -1,13 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { DiTraceService } from '../../services/di-trace.service';
 import { DemoLoggerService } from '../../services/demo-logger.service';
+import { TooltipDirective } from '../../../../shared/directives/tooltip';
 
 @Component({
   selector: 'app-di-tracing-demo',
+  standalone: true,
+  imports: [TooltipDirective],
   template: `
     <div class="demo-box">
       <p class="demo-msg">{{ logger.message }}</p>
-      <button class="demo-btn" (click)="logAgain()">Log again</button>
+      <button class="demo-btn" (click)="logAgain()" appTooltip="Call the injected logger again. Watch the trace to see the same instance is used.">Log again</button>
     </div>
   `,
   styles: [

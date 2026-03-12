@@ -1,12 +1,13 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { RxjsLabStateService } from './services/rxjs-lab-state.service';
 import { RxjsConceptsSidebarComponent } from './components/rxjs-concepts-sidebar/rxjs-concepts-sidebar.component';
+import { TooltipDirective } from '../../shared/directives/tooltip';
 
 type Tab = 'stream' | 'lifecycle' | 'concurrency' | 'error-retry' | 'cold-hot';
 
 @Component({
   selector: 'app-rxjs-lab',
-  imports: [RxjsConceptsSidebarComponent],
+  imports: [RxjsConceptsSidebarComponent, TooltipDirective],
   templateUrl: './rxjs-lab.component.html',
   styleUrl: './rxjs-lab.component.css',
 })

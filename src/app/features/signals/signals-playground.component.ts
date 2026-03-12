@@ -1,12 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { SignalsPlaygroundStateService } from './services/signals-playground-state.service';
 import { SignalsConceptsSidebarComponent } from './components/signals-concepts-sidebar/signals-concepts-sidebar.component';
+import { TooltipDirective } from '../../shared/directives/tooltip';
 
 type Tab = 'effect' | 'computed' | 'batching' | 'mutation';
 
 @Component({
   selector: 'app-signals-playground',
-  imports: [SignalsConceptsSidebarComponent],
+  imports: [SignalsConceptsSidebarComponent, TooltipDirective],
   templateUrl: './signals-playground.component.html',
   styleUrl: './signals-playground.component.css',
 })

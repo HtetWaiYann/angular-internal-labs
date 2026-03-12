@@ -2,12 +2,13 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RxjsLab2StateService } from './services/rxjs-lab-2-state.service';
 import { RxjsLab2ConceptsSidebarComponent } from './components/rxjs-lab-2-concepts-sidebar/rxjs-lab-2-concepts-sidebar.component';
+import { TooltipDirective } from '../../shared/directives/tooltip';
 
 type Tab = 'filter-distinct' | 'search' | 'catch-error' | 'take' | 'combine' | 'angular';
 
 @Component({
   selector: 'app-rxjs-lab-2',
-  imports: [AsyncPipe, RxjsLab2ConceptsSidebarComponent],
+  imports: [AsyncPipe, RxjsLab2ConceptsSidebarComponent, TooltipDirective],
   templateUrl: './rxjs-lab-2.component.html',
   styleUrl: './rxjs-lab-2.component.css',
 })

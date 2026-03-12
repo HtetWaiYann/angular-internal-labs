@@ -5,6 +5,7 @@ import { OnPushCdComponent } from './components/onpush-cd/onpush-cd.component';
 import { SignalCdComponent } from './components/signal-cd/signal-cd.component';
 import { CdConceptsSidebarComponent } from './components/cd-concepts-sidebar/cd-concepts-sidebar.component';
 import { CdTreeComponent, CdTreeState } from './components/cd-tree/cd-tree.component';
+import { TooltipDirective } from '../../shared/directives/tooltip';
 
 export type Tab = 'default' | 'onpush' | 'signal' | 'compare';
 type MsgType = 'rendered' | 'skipped';
@@ -24,6 +25,7 @@ const IDLE_TREE: CdTreeState = { default: 'idle', onpush: 'idle', signal: 'idle'
     SignalCdComponent,
     CdConceptsSidebarComponent,
     CdTreeComponent,
+    TooltipDirective,
   ],
   templateUrl: './change-detection-lab.component.html',
   styleUrl: './change-detection-lab.component.css',

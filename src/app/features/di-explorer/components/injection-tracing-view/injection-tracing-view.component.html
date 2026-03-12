@@ -8,7 +8,7 @@
     <div class="tracing-log">
       <div class="log-header">
         <span class="live-label">Injection trace</span>
-        <button class="clear-btn" (click)="traceService.clear()">↺ Clear</button>
+        <button class="clear-btn" (click)="traceService.clear()" appTooltip="Clear the injection trace log.">↺ Clear</button>
       </div>
       <div class="log-panel">
         @for (entry of trace(); track entry.id) {

@@ -62,7 +62,7 @@
       <div class="code-block">
         <div class="code-topbar">
           <span class="code-filename">component.ts</span>
-          <button class="run-btn run-btn--default" (click)="runDefault()">
+          <button class="run-btn run-btn--default" (click)="runDefault()" appTooltip="Trigger a change detection cycle. Default strategy always re-renders.">
             ▶ Run
           </button>
         </div>
@@ -87,13 +87,13 @@
             {{ msg.text }}
           </div>
         }
-        <button class="reset-btn" (click)="resetDefault()">↺ Reset</button>
+        <button class="reset-btn" (click)="resetDefault()" appTooltip="Clear render count and reset state.">↺ Reset</button>
       </div>
 
       <div class="code-block">
         <div class="code-topbar">
           <span class="code-filename">runOutsideAngular.ts</span>
-          <button class="run-btn run-btn--ghost" (click)="runOutsideAngular()">
+          <button class="run-btn run-btn--ghost" (click)="runOutsideAngular()" appTooltip="Run a simulated heavy loop outside Zone.js. Change detection runs only once when re-entering Angular.">
             Run outside Angular
           </button>
         </div>
@@ -128,10 +128,10 @@
         <div class="code-topbar">
           <span class="code-filename">component.ts</span>
           <div class="run-group">
-            <button class="run-btn run-btn--onpush" (click)="changeInput()">
+            <button class="run-btn run-btn--onpush" (click)="changeInput()" appTooltip="Change the @Input value. OnPush re-renders because the input reference changed.">
               ▶ Change Input
             </button>
-            <button class="run-btn run-btn--ghost" (click)="triggerCdOnly()">
+            <button class="run-btn run-btn--ghost" (click)="triggerCdOnly()" appTooltip="Trigger a CD cycle without changing input. OnPush skips — no input change.">
               CD cycle only
             </button>
           </div>
@@ -159,7 +159,7 @@
             [class.status--skipped]="msg.type === 'skipped'"
           >{{ msg.text }}</div>
         }
-        <button class="reset-btn" (click)="resetOnpush()">↺ Reset</button>
+        <button class="reset-btn" (click)="resetOnpush()" appTooltip="Clear render count and reset state.">↺ Reset</button>
       </div>
 
     </div>
@@ -172,7 +172,7 @@
       <div class="code-block">
         <div class="code-topbar">
           <span class="code-filename">component.ts</span>
-          <button class="run-btn run-btn--signal" (click)="updateSignal()">
+          <button class="run-btn run-btn--signal" (click)="updateSignal()" appTooltip="Update the signal. Only views that read it are scheduled for update — no full tree walk.">
             ▶ Update Signal
           </button>
         </div>
@@ -196,7 +196,7 @@
             {{ msg.text }}
           </div>
         }
-        <button class="reset-btn" (click)="resetSignal()">↺ Reset</button>
+        <button class="reset-btn" (click)="resetSignal()" appTooltip="Clear render count and reset signal.">↺ Reset</button>
       </div>
 
     </div>
@@ -213,16 +213,16 @@
 
       <!-- Action buttons -->
       <div class="compare-actions">
-        <button class="run-btn run-btn--default" (click)="compareTriggerCd()">
+        <button class="run-btn run-btn--default" (click)="compareTriggerCd()" appTooltip="Trigger a full CD pass. Default: checked. OnPush & Signal: skipped.">
           Trigger CD cycle
         </button>
-        <button class="run-btn run-btn--onpush" (click)="compareChangeInput()">
+        <button class="run-btn run-btn--onpush" (click)="compareChangeInput()" appTooltip="Change OnPush @Input. Default & OnPush: checked. Signal: skipped.">
           Change &#64;Input
         </button>
-        <button class="run-btn run-btn--signal" (click)="compareUpdateSignal()">
+        <button class="run-btn run-btn--signal" (click)="compareUpdateSignal()" appTooltip="Update the signal. Only Signal component is targeted; others skipped.">
           Update Signal
         </button>
-        <button class="reset-btn compare-reset" (click)="resetCompare()">↺ Reset</button>
+        <button class="reset-btn compare-reset" (click)="resetCompare()" appTooltip="Clear all counters and reset state.">↺ Reset</button>
       </div>
 
       <!-- 3-column strategy grid -->

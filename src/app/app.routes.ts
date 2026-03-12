@@ -86,6 +86,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'track-by',
+        loadComponent: () =>
+          import('./features/track-by/track-by-lab.component').then(
+            (m) => m.TrackByLabComponent,
+          ),
+      },
+      {
         path: 'replay',
         loadComponent: () =>
           import('./features/replay/replay-placeholder.component').then(

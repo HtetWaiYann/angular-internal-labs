@@ -66,11 +66,18 @@ export class ShellComponent {
       description: 'Injector hierarchy',
     },
     {
-      label: 'Replay Engine',
-      route: '/replay',
-      available: false,
-      description: 'Session recording + playback',
+      label: 'TrackBy Lab',
+      route: '/track-by',
+      available: true,
+      description: 'List DOM reuse',
     },
+    // NOT USABLE FOR NOW
+    // {
+    //   label: 'Replay Engine',
+    //   route: '/replay',
+    //   available: false,
+    //   description: 'Session recording + playback',
+    // },
   ];
 
   toggleNavDrawer(): void {
