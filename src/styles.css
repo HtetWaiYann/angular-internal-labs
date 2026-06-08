@@ -2,20 +2,81 @@
 @import './app/shared/styles/lab-layout.css';
 
 :root {
-  --bg-base: #0a0a0f;
-  --bg-panel: #13131a;
-  --bg-panel-hover: #1a1a25;
-  --border: #2a2a3d;
-  --border-subtle: #1e1e2e;
-  --text-primary: #e4e4f0;
-  --text-secondary: #8888a0;
-  --text-muted: #55556a;
+  /* ── Surfaces ─────────────────────────────────────────────── */
+  --bg-base: #f5f5f5;            /* whitesmoke — page background */
+  --bg-panel: #ffffff;           /* cards, panels, sidebars */
+  --bg-panel-hover: #f1f3f4;     /* hover state for nav/buttons */
+  --bg-elevated: #ffffff;        /* dropdowns, tooltips */
+  --bg-sunken: #ecedef;          /* code blocks, inset wells */
 
-  --color-default: #60a5fa;
-  --color-onpush: #f59e0b;
-  --color-signal: #4ade80;
-  --color-accent: #dd0031;
+  /* ── Borders ──────────────────────────────────────────────── */
+  --border: #d4d6db;
+  --border-subtle: #e6e7eb;
+  --border-strong: #b9bcc2;
 
+  /* ── Text (all AA on whitesmoke / white) ──────────────────── */
+  --text-primary: #1a1f24;       /* ~14:1 on whitesmoke */
+  --text-secondary: #3f4750;     /* ~9:1 */
+  --text-muted: #6b7280;         /* ~4.7:1 */
+  --text-on-primary: #ffffff;    /* text on midnight green */
+
+  /* ── Brand: midnight green ───────────────────────────────── */
+  --color-primary: #004953;          /* hero brand */
+  --color-primary-hover: #00343d;    /* darker for hover */
+  --color-primary-soft: #e0eef0;     /* tint for backgrounds */
+  --color-primary-ring: #007a8a;     /* focus rings, secondary accents */
+
+  /* ── Strategy / category colors (CD, RxJS, signals) ──────── */
+  /* All meet AA on white (#ffffff) and whitesmoke. */
+  --color-default: #1d4ed8;          /* blue-700  — Default CD */
+  --color-onpush: #b45309;           /* amber-700 — OnPush CD */
+  --color-signal: #15803d;           /* green-700 — Signal CD */
+  --color-accent: #004953;           /* midnight green — replaces Angular red */
+
+  /* ── Status (universal, used across labs) ────────────────── */
+  --status-success: #15803d;         /* rendered / checked / active */
+  --status-success-bg: #e7f5ec;
+  --status-success-border: #b6e0c2;
+
+  --status-warning: #b45309;         /* skipped / paused / cancelled */
+  --status-warning-bg: #fdf3e3;
+  --status-warning-border: #f1d59b;
+
+  --status-danger: #b91c1c;          /* error */
+  --status-danger-bg: #fdecec;
+  --status-danger-border: #f3c1c1;
+
+  --status-info: #1d4ed8;            /* request / route recognized */
+  --status-info-bg: #e7eefd;
+  --status-info-border: #bccbf3;
+
+  --status-idle: #6b7280;            /* idle / neutral */
+  --status-idle-bg: #f0f1f3;
+  --status-idle-border: #d9dbdf;
+
+  /* ── Router lab categorical (re-tuned for light bg) ──────── */
+  --color-guard: #c2410c;            /* orange-700 */
+  --color-guard-bg: #fbe9dc;
+  --color-resolve: #6d28d9;          /* violet-700 */
+  --color-resolve-bg: #ece1fb;
+  --color-lazy: #15803d;             /* green-700 (matches signal) */
+  --color-lazy-bg: #e7f5ec;
+  --color-navigation: #b91c1c;       /* red-700 */
+  --color-navigation-bg: #fdecec;
+
+  /* ── DI lab scope tokens ─────────────────────────────────── */
+  --color-scope-root: #004953;       /* midnight green */
+  --color-scope-module: #6d28d9;     /* violet-700 */
+  --color-scope-component: #15803d;  /* green-700 */
+  --color-scope-platform: #c2410c;   /* orange-700 */
+  --color-scope-null: #6b7280;
+
+  /* ── Shadow tokens (subtle on whitesmoke) ────────────────── */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 32, 0.04);
+  --shadow-md: 0 2px 4px rgba(15, 23, 32, 0.04), 0 4px 12px rgba(15, 23, 32, 0.05);
+  --shadow-lg: 0 8px 24px rgba(15, 23, 32, 0.08), 0 2px 6px rgba(15, 23, 32, 0.04);
+
+  /* ── Typography ─────────────────────────────────────────── */
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
 }
 
@@ -38,9 +99,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Global focus ring — visible for keyboard users only */
+:focus-visible {
+  outline: 2px solid var(--color-primary-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -48,8 +116,8 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3px;
+  background: var(--border-strong);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

@@ -60,6 +60,7 @@
   border-radius: 10px;
   max-height: 220px;
   overflow-y: auto;
+  box-shadow: var(--shadow-sm);
 }
 
 .log-row {
@@ -92,19 +93,23 @@
 }
 
 .log-row--request .log-msg {
-  color: var(--color-accent);
+  color: var(--color-primary);
+  font-weight: 600;
 }
 
 .log-row--lookup .log-msg {
-  color: #ea580c;
+  color: var(--color-scope-platform);
+  font-weight: 600;
 }
 
 .log-row--create .log-msg {
-  color: #9333ea;
+  color: var(--color-scope-module);
+  font-weight: 600;
 }
 
 .log-row--return .log-msg {
-  color: var(--color-signal);
+  color: var(--status-success);
+  font-weight: 600;
 }
 
 .log-empty {
@@ -138,8 +143,8 @@
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   line-height: 1.7;
-  color: var(--text-secondary);
-  background: var(--bg-base);
+  color: var(--text-primary);
+  background: var(--bg-sunken);
   white-space: pre;
   overflow-x: auto;
 }

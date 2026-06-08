@@ -240,7 +240,7 @@ export class ChangeDetectionLabComponent {
     this.labState.sharedSignal.update((v) => v + 1);
     this.cmpSignalRenders.update((v) => v + 1);
     this.cmpSignalFlash.update((v) => v + 1);
-    this.cmpSignalStatus.set({ type: 'targeted', label: 'targeted ⚡' });
+    this.cmpSignalStatus.set({ type: 'targeted', label: 'targeted' });
     this.cmpLastAction.set('update-signal');
     this.setTree({ default: 'skipped', onpush: 'skipped', signal: 'targeted' });
   }

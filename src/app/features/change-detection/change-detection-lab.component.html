@@ -63,7 +63,7 @@
         <div class="code-topbar">
           <span class="code-filename">component.ts</span>
           <button class="run-btn run-btn--default" (click)="runDefault()" appTooltip="Trigger a change detection cycle. Default strategy always re-renders.">
-            ▶ Run
+            Run
           </button>
         </div>
         <pre class="code-pre">{{ code.default }}</pre>
@@ -87,7 +87,7 @@
             {{ msg.text }}
           </div>
         }
-        <button class="reset-btn" (click)="resetDefault()" appTooltip="Clear render count and reset state.">↺ Reset</button>
+        <button class="reset-btn" (click)="resetDefault()" appTooltip="Clear render count and reset state.">Reset</button>
       </div>
 
       <div class="code-block">
@@ -129,7 +129,7 @@
           <span class="code-filename">component.ts</span>
           <div class="run-group">
             <button class="run-btn run-btn--onpush" (click)="changeInput()" appTooltip="Change the @Input value. OnPush re-renders because the input reference changed.">
-              ▶ Change Input
+              Change Input
             </button>
             <button class="run-btn run-btn--ghost" (click)="triggerCdOnly()" appTooltip="Trigger a CD cycle without changing input. OnPush skips — no input change.">
               CD cycle only
@@ -159,7 +159,7 @@
             [class.status--skipped]="msg.type === 'skipped'"
           >{{ msg.text }}</div>
         }
-        <button class="reset-btn" (click)="resetOnpush()" appTooltip="Clear render count and reset state.">↺ Reset</button>
+        <button class="reset-btn" (click)="resetOnpush()" appTooltip="Clear render count and reset state.">Reset</button>
       </div>
 
     </div>
@@ -173,7 +173,7 @@
         <div class="code-topbar">
           <span class="code-filename">component.ts</span>
           <button class="run-btn run-btn--signal" (click)="updateSignal()" appTooltip="Update the signal. Only views that read it are scheduled for update — no full tree walk.">
-            ▶ Update Signal
+            Update Signal
           </button>
         </div>
         <pre class="code-pre">{{ code.signal }}</pre>
@@ -196,7 +196,7 @@
             {{ msg.text }}
           </div>
         }
-        <button class="reset-btn" (click)="resetSignal()" appTooltip="Clear render count and reset signal.">↺ Reset</button>
+        <button class="reset-btn" (click)="resetSignal()" appTooltip="Clear render count and reset signal.">Reset</button>
       </div>
 
     </div>
@@ -222,7 +222,7 @@
         <button class="run-btn run-btn--signal" (click)="compareUpdateSignal()" appTooltip="Update the signal. Only Signal component is targeted; others skipped.">
           Update Signal
         </button>
-        <button class="reset-btn compare-reset" (click)="resetCompare()" appTooltip="Clear all counters and reset state.">↺ Reset</button>
+        <button class="reset-btn compare-reset" (click)="resetCompare()" appTooltip="Clear all counters and reset state.">Reset</button>
       </div>
 
       <!-- 3-column strategy grid -->
@@ -246,10 +246,9 @@
             [class.compare-status--idle]="!cmpDefaultStatus()"
           >
             @if (cmpDefaultStatus(); as s) {
-              <span class="cmp-icon">{{ s.type === 'checked' ? '✓' : '⊘' }}</span>
               {{ s.label }}
             } @else {
-              <span class="cmp-icon cmp-icon--idle">—</span>
+              <span class="cmp-idle-text">idle</span>
             }
           </div>
         </div>
@@ -272,10 +271,9 @@
             [class.compare-status--idle]="!cmpOnpushStatus()"
           >
             @if (cmpOnpushStatus(); as s) {
-              <span class="cmp-icon">{{ s.type === 'checked' ? '✓' : '⊘' }}</span>
               {{ s.label }}
             } @else {
-              <span class="cmp-icon cmp-icon--idle">—</span>
+              <span class="cmp-idle-text">idle</span>
             }
           </div>
         </div>
@@ -298,10 +296,9 @@
             [class.compare-status--idle]="!cmpSignalStatus()"
           >
             @if (cmpSignalStatus(); as s) {
-              <span class="cmp-icon">{{ s.type === 'targeted' ? '⚡' : (s.type === 'checked' ? '✓' : '⊘') }}</span>
               {{ s.label }}
             } @else {
-              <span class="cmp-icon cmp-icon--idle">—</span>
+              <span class="cmp-idle-text">idle</span>
             }
           </div>
         </div>

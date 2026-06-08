@@ -74,7 +74,7 @@
   border-radius: 6px;
   min-width: 8rem;
 }
-.input-field:focus { outline: none; border-color: var(--color-default); }
+.input-field:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent); }
 .input-number { width: 5rem; min-width: 5rem; }
 
 .code-block { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
@@ -127,8 +127,8 @@
   font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.75;
-  color: var(--text-secondary);
-  background: var(--bg-base);
+  color: var(--text-primary);
+  background: var(--bg-sunken);
   white-space: pre;
   overflow-x: auto;
 }

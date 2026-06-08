@@ -57,8 +57,9 @@
 }
 
 .tab--active {
-  color: var(--text-primary);
-  border-bottom-color: var(--color-accent);
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: 600;
 }
 
 .tab-pip {
@@ -69,19 +70,19 @@
 }
 
 .pip--hierarchy {
-  background: var(--color-accent);
+  background: var(--color-scope-root);
 }
 
 .pip--scope {
-  background: #ea580c;
+  background: var(--color-scope-platform);
 }
 
 .pip--resolution {
-  background: #9333ea;
+  background: var(--color-scope-module);
 }
 
 .pip--tracing {
-  background: var(--color-signal);
+  background: var(--color-scope-component);
 }
 
 .tab-pane {

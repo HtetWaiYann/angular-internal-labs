@@ -20,32 +20,32 @@ export class InjectorHierarchyChartComponent {
   private readonly treeData: TreeNode = {
     name: 'Child Component',
     value: 'child',
-    itemStyle: { borderColor: '#60a5fa', color: 'rgba(96, 165, 250, 0.2)' },
+    itemStyle: { borderColor: '#1d4ed8', color: 'rgba(29, 78, 216, 0.12)' },
     children: [
       {
         name: 'ComponentInjector',
         value: 'component',
-        itemStyle: { borderColor: '#4ade80', color: 'rgba(74, 222, 128, 0.2)' },
+        itemStyle: { borderColor: '#15803d', color: 'rgba(21, 128, 61, 0.12)' },
         children: [
           {
             name: 'EnvironmentInjector',
             value: 'env',
-            itemStyle: { borderColor: '#9333ea', color: 'rgba(147, 51, 234, 0.2)' },
+            itemStyle: { borderColor: '#6d28d9', color: 'rgba(109, 40, 217, 0.12)' },
             children: [
               {
                 name: 'RootInjector',
                 value: 'root',
-                itemStyle: { borderColor: '#dd0031', color: 'rgba(221, 0, 49, 0.2)' },
+                itemStyle: { borderColor: '#004953', color: 'rgba(0, 73, 83, 0.12)' },
                 children: [
                   {
                     name: 'PlatformInjector',
                     value: 'platform',
-                    itemStyle: { borderColor: '#ea580c', color: 'rgba(234, 88, 12, 0.2)' },
+                    itemStyle: { borderColor: '#c2410c', color: 'rgba(194, 65, 12, 0.12)' },
                     children: [
                       {
                         name: 'NullInjector',
                         value: 'top',
-                        itemStyle: { borderColor: '#6b7280', color: 'rgba(107, 114, 128, 0.2)' },
+                        itemStyle: { borderColor: '#6b7280', color: 'rgba(107, 114, 128, 0.12)' },
                       },
                     ],
                   },
@@ -85,7 +85,7 @@ export class InjectorHierarchyChartComponent {
         edgeForkPosition: '50%',
         initialTreeDepth: -1,
         lineStyle: {
-          color: '#2a2a3d',
+          color: '#b9bcc2',
           width: 2,
         },
         label: {
@@ -94,7 +94,7 @@ export class InjectorHierarchyChartComponent {
           align: 'left',
           fontSize: 13,
           fontFamily: 'ui-monospace, monospace',
-          color: '#e4e4f0',
+          color: '#1a1f24',
           formatter: '{b}',
           distance: 12,
         },
@@ -114,7 +114,7 @@ export class InjectorHierarchyChartComponent {
         emphasis: {
           focus: 'ancestor',
           itemStyle: {
-            borderColor: '#dd0031',
+            borderColor: '#004953',
             borderWidth: 2,
           },
         },

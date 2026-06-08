@@ -53,13 +53,13 @@ import type { TrackByItem } from '../../services/track-by-lab-state.service';
       letter-spacing: 0.05em;
       padding: 0.2rem 0.4rem;
       border-radius: 4px;
-      background: color-mix(in srgb, var(--text-muted) 20%, transparent);
+      background: var(--status-idle-bg);
       color: var(--text-muted);
     }
 
     .track-by-item-badge--new {
-      background: color-mix(in srgb, var(--color-accent) 20%, transparent);
-      color: var(--color-accent);
+      background: var(--status-info-bg);
+      color: var(--status-info);
       animation: track-by-badge-pulse 0.5s ease-out;
     }
 

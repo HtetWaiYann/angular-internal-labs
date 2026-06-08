@@ -4,10 +4,10 @@ import type { EChartsOption } from 'echarts';
 import type { TimelineEntry } from '../../services/router-lifecycle-state.service';
 
 const TYPE_COLORS: Record<string, string> = {
-  navigation: '#dc2626',
-  guard:      '#ea580c',
-  resolver:   '#9333ea',
-  lazy:       '#16a34a',
+  navigation: '#b91c1c', // status-danger / navigation
+  guard:      '#c2410c', // color-guard (orange-700)
+  resolver:   '#6d28d9', // color-resolve (violet-700)
+  lazy:       '#15803d', // color-lazy (green-700)
 };
 
 interface GanttRow {
@@ -120,19 +120,19 @@ export class NavGanttComponent {
         min: 0,
         max: total,
         axisLabel: {
-          fontSize: 9,
+          fontSize: 10,
           fontFamily: 'monospace',
           color: '#6b7280',
           formatter: (v: number) => `${v.toFixed(0)}ms`,
         },
-        splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)', type: 'dashed' } },
-        axisLine: { lineStyle: { color: '#374151' } },
-        axisTick: { lineStyle: { color: '#374151' } },
+        splitLine: { lineStyle: { color: 'rgba(15, 23, 32, 0.06)', type: 'dashed' } },
+        axisLine: { lineStyle: { color: '#d4d6db' } },
+        axisTick: { lineStyle: { color: '#d4d6db' } },
       },
       yAxis: {
         type: 'category',
         data: labels,
-        axisLabel: { fontSize: 10, fontFamily: 'monospace', color: '#9ca3af' },
+        axisLabel: { fontSize: 11, fontFamily: 'monospace', color: '#3f4750' },
         axisLine: { show: false },
         axisTick: { show: false },
         splitLine: { show: false },
@@ -153,9 +153,10 @@ export class NavGanttComponent {
           label: {
             show: true,
             position: 'right',
-            fontSize: 9,
+            fontSize: 10,
             fontFamily: 'monospace',
-            color: '#9ca3af',
+            color: '#3f4750',
+            fontWeight: 600,
             formatter: (params: any) => {
               const row = rows[params.data._rowIdx as number];
               if (!row || row.isPoint) return '';

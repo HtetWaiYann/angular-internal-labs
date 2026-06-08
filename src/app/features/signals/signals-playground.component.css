@@ -148,8 +148,8 @@
   font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.75;
-  color: var(--text-secondary);
-  background: var(--bg-base);
+  color: var(--text-primary);
+  background: var(--bg-sunken);
   white-space: pre;
   overflow-x: auto;
 }

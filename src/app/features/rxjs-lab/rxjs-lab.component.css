@@ -108,7 +108,8 @@
 
 .input-field:focus {
   outline: none;
-  border-color: var(--color-default);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent);
 }
 
 .input-number {
@@ -203,8 +204,8 @@
   font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.75;
-  color: var(--text-secondary);
-  background: var(--bg-base);
+  color: var(--text-primary);
+  background: var(--bg-sunken);
   white-space: pre;
   overflow-x: auto;
 }
@@ -269,11 +270,13 @@
 }
 
 .log-row--error .log-msg {
-  color: var(--color-accent);
+  color: var(--status-danger);
+  font-weight: 600;
 }
 
 .log-row--retry .log-msg {
-  color: var(--color-onpush);
+  color: var(--status-warning);
+  font-weight: 600;
 }
 
 .log-time {
@@ -311,15 +314,15 @@
   color: var(--text-muted);
   padding: 0.35rem 0.75rem;
   border-radius: 6px;
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
+  background: var(--status-idle-bg);
+  border: 1px solid var(--status-idle-border);
   align-self: flex-start;
 }
 
 .status-badge--active {
-  color: var(--color-signal);
-  border-color: color-mix(in srgb, var(--color-signal) 40%, transparent);
-  background: color-mix(in srgb, var(--color-signal) 8%, transparent);
+  color: var(--status-success);
+  border-color: var(--status-success-border);
+  background: var(--status-success-bg);
 }
 
 .status-meta {

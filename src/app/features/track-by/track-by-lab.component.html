@@ -11,18 +11,18 @@
 
     <div class="track-by-actions">
       <button class="run-btn run-btn--trackby" (click)="addItem()" appTooltip="Add a new item to the end of the list. Both lists create one new component instance.">
-        ▶ Add item
+        Add item
       </button>
       <button class="run-btn run-btn--trackby" (click)="reorder()" appTooltip="Move the first item to the end. Same object refs in a new order — both lists reuse views.">
-        ▶ Reorder
+        Reorder
       </button>
       <button class="run-btn run-btn--trackby" (click)="updateFirst()" appTooltip="Change the first item's name (creates a new object reference). Without trackBy: 1 new creation. With trackBy: 0.">
-        ▶ Update first
+        Update first
       </button>
       <button class="run-btn run-btn--trackby" (click)="refresh()" appTooltip="Replace the array with new objects — same data, new memory refs. Simulates refetching from a server. Without trackBy: all items recreated. With trackBy: none.">
-        ▶ Refresh (new refs)
+        Refresh (new refs)
       </button>
-      <button class="reset-btn" (click)="reset()" appTooltip="Clear creation counters and restore the initial list.">↺ Reset</button>
+      <button class="reset-btn" (click)="reset()" appTooltip="Clear creation counters and restore the initial list.">Reset</button>
     </div>
 
     @if (lastAction(); as action) {

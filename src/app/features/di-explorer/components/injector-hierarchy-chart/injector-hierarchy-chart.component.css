@@ -3,6 +3,7 @@
   background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: 12px;
+  box-shadow: var(--shadow-sm);
 }
 
 .chart-header {
@@ -57,17 +58,17 @@
 }
 
 .legend--null {
-  background: #6b7280;
+  background: var(--color-scope-null);
 }
 
 .legend--platform {
-  background: #ea580c;
+  background: var(--color-scope-platform);
 }
 
 .legend--root {
-  background: #dd0031;
+  background: var(--color-scope-root);
 }
 
 .legend--component {
-  background: #4ade80;
+  background: var(--color-scope-component);
 }

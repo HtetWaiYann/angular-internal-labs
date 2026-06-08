@@ -149,13 +149,13 @@
 }
 
 .track-by-column--bad {
-  border-color: color-mix(in srgb, var(--color-accent) 30%, var(--border));
-  background: color-mix(in srgb, var(--color-accent) 4%, var(--bg-base));
+  border-color: var(--status-danger-border);
+  background: var(--bg-panel);
 }
 
 .track-by-column--good {
-  border-color: color-mix(in srgb, var(--color-signal) 30%, var(--border));
-  background: color-mix(in srgb, var(--color-signal) 4%, var(--bg-base));
+  border-color: var(--status-success-border);
+  background: var(--bg-panel);
 }
 
 .track-by-column-header {
@@ -189,15 +189,15 @@
 }
 
 .track-by-metric--bad {
-  background: color-mix(in srgb, var(--color-accent) 15%, transparent);
-  color: var(--color-accent);
-  border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+  background: var(--status-danger-bg);
+  color: var(--status-danger);
+  border: 1px solid var(--status-danger-border);
 }
 
 .track-by-metric--good {
-  background: color-mix(in srgb, var(--color-signal) 15%, transparent);
-  color: var(--color-signal);
-  border: 1px solid color-mix(in srgb, var(--color-signal) 30%, transparent);
+  background: var(--status-success-bg);
+  color: var(--status-success);
+  border: 1px solid var(--status-success-border);
 }
 
 .track-by-code.code-block {
@@ -255,11 +255,11 @@
 }
 
 .track-by-legend-badge--new {
-  background: color-mix(in srgb, var(--color-accent) 20%, transparent);
-  color: var(--color-accent);
+  background: var(--status-info-bg);
+  color: var(--status-info);
 }
 
 .track-by-legend-badge--reused {
-  background: color-mix(in srgb, var(--text-muted) 20%, transparent);
+  background: var(--status-idle-bg);
   color: var(--text-muted);
 }

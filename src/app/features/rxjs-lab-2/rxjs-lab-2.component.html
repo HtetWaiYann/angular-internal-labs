@@ -40,7 +40,7 @@
         <div class="code-block">
           <div class="code-topbar">
             <span class="code-filename">filter-distinct.ts</span>
-            <button class="run-btn run-btn--signal" (click)="state.runFilterDistinct()" appTooltip="Run map → filter → distinctUntilChanged. See which values pass through.">▶ Run</button>
+            <button class="run-btn run-btn--signal" (click)="state.runFilterDistinct()" appTooltip="Run map → filter → distinctUntilChanged. See which values pass through.">Run</button>
           </div>
           <pre class="code-pre">{{ codeFilterDistinct() }}</pre>
         </div>
@@ -53,7 +53,7 @@
               <div class="log-empty">Click Run.</div>
             }
           </div>
-          <button class="reset-btn" (click)="state.clearFilterDistinct()" appTooltip="Clear the emitted log.">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearFilterDistinct()" appTooltip="Clear the emitted log.">Reset</button>
         </div>
       </div>
     }
@@ -74,7 +74,7 @@
             <span class="code-filename">search.ts</span>
             <div class="run-group">
               <button class="run-btn run-btn--signal" (click)="state.startSearch()" appTooltip="Start the search stream. Type a query, then trigger to see debounce + switchMap.">Start</button>
-              <button class="run-btn run-btn--default" (click)="state.triggerSearch()" appTooltip="Emit the current query. debounceTime waits for typing to pause; switchMap cancels previous request.">▶ Trigger query</button>
+              <button class="run-btn run-btn--default" (click)="state.triggerSearch()" appTooltip="Emit the current query. debounceTime waits for typing to pause; switchMap cancels previous request.">Trigger query</button>
             </div>
           </div>
           <pre class="code-pre">{{ codeSearch() }}</pre>
@@ -90,7 +90,7 @@
             @for (r of state.searchResults(); track $index) { <div class="log-row"><span class="log-msg">{{ r }}</span></div> }
             @empty { <div class="log-empty">—</div> }
           </div>
-          <button class="reset-btn" (click)="state.clearSearch()" appTooltip="Clear the log and results.">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearSearch()" appTooltip="Clear the log and results.">Reset</button>
         </div>
       </div>
     }
@@ -105,7 +105,7 @@
         <div class="code-block">
           <div class="code-topbar">
             <span class="code-filename">catchError.ts</span>
-            <button class="run-btn run-btn--signal" (click)="state.runCatchError()" appTooltip="Run the stream. Source emits a, b, then errors; catchError returns the fallback so the stream continues.">▶ Run</button>
+            <button class="run-btn run-btn--signal" (click)="state.runCatchError()" appTooltip="Run the stream. Source emits a, b, then errors; catchError returns the fallback so the stream continues.">Run</button>
           </div>
           <pre class="code-pre">{{ codeCatchError() }}</pre>
         </div>
@@ -114,7 +114,7 @@
             @for (line of state.catchErrorLog(); track $index) { <div class="log-row"><span class="log-msg">{{ line }}</span></div> }
             @empty { <div class="log-empty">Click Run.</div> }
           </div>
-          <button class="reset-btn" (click)="state.clearCatchError()" appTooltip="Clear the log.">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearCatchError()" appTooltip="Clear the log.">Reset</button>
         </div>
       </div>
     }
@@ -142,7 +142,7 @@
             @for (line of state.takeUntilLog(); track $index) { <div class="log-row"><span class="log-msg">{{ line }}</span></div> }
             @if (state.takeUntilDestroyed()) { <div class="log-row log-msg">Destroy emitted.</div> }
           </div>
-          <button class="reset-btn" (click)="state.clearTake()" appTooltip="Clear both logs.">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearTake()" appTooltip="Clear both logs.">Reset</button>
         </div>
       </div>
     }
@@ -167,7 +167,7 @@
             @empty { <div class="log-empty">Start, then Emit A / Emit B.</div> }
           </div>
           <p class="tab-desc">A = {{ state.combineSourceA() }}, B = {{ state.combineSourceB() }} — each button emits and increments.</p>
-          <button class="reset-btn" (click)="state.clearCombine()" appTooltip="Clear the combined log and reset sources.">↺ Reset</button>
+          <button class="reset-btn" (click)="state.clearCombine()" appTooltip="Clear the combined log and reset sources.">Reset</button>
         </div>
       </div>
     }

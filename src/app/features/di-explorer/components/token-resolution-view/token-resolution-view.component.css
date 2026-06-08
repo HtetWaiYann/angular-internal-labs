@@ -54,13 +54,14 @@
 }
 
 .run-btn--resolution {
-  background: rgba(147, 51, 234, 0.2);
-  border: 1px solid rgba(147, 51, 234, 0.4);
-  color: #a78bfa;
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  color: var(--text-on-primary);
 }
 
 .run-btn--resolution:not(:disabled):hover {
-  background: rgba(147, 51, 234, 0.3);
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .reset-btn {
@@ -84,8 +85,8 @@
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   line-height: 1.7;
-  color: var(--text-secondary);
-  background: var(--bg-base);
+  color: var(--text-primary);
+  background: var(--bg-sunken);
   white-space: pre;
   overflow-x: auto;
 }
@@ -132,8 +133,8 @@
 }
 
 .step-row--current {
-  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+  background: var(--color-primary-soft);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
 .step-row--past .step-injector {
@@ -141,8 +142,8 @@
 }
 
 .step-row--active .step-injector {
-  color: var(--color-signal);
-  font-weight: 600;
+  color: var(--status-success);
+  font-weight: 700;
 }
 
 .step-arrow {
@@ -165,8 +166,8 @@
 }
 
 .step-detail--found {
-  color: var(--color-signal);
-  font-weight: 500;
+  color: var(--status-success);
+  font-weight: 600;
 }
 
 .resolution-note {
@@ -174,8 +175,8 @@
   gap: 0.625rem;
   align-items: flex-start;
   padding: 0.75rem 1rem;
-  background: color-mix(in srgb, var(--color-signal) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-signal) 25%, transparent);
+  background: var(--status-success-bg);
+  border: 1px solid var(--status-success-border);
   border-radius: 8px;
   font-size: 0.8125rem;
   color: var(--text-secondary);
@@ -185,7 +186,10 @@
 .resolution-note code {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--color-accent);
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  padding: 0.05rem 0.25rem;
+  border-radius: 3px;
 }
 
 .note-icon {

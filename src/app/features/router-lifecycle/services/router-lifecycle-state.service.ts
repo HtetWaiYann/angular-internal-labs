@@ -42,18 +42,6 @@ export interface NavSummary {
   outcome: 'complete' | 'cancelled' | 'error';
 }
 
-// ── Pipeline status ──────────────────────────────────────────────────────────
-
-export type PhaseStatus = 'idle' | 'active' | 'done' | 'skipped' | 'cancelled' | 'error';
-
-export interface RouterPipelineStatus {
-  start: PhaseStatus;
-  recognized: PhaseStatus;
-  guards: PhaseStatus;
-  resolve: PhaseStatus;
-  end: PhaseStatus;
-}
-
 // ── Service ──────────────────────────────────────────────────────────────────
 
 @Injectable({ providedIn: 'root' })
@@ -66,7 +54,7 @@ export class RouterLifecycleStateService {
 
   readonly currentNavId = signal<number>(0);
 
-  /** Timeline to display: last completed nav when idle, current nav when in progress */
+  /** Timeline to display: current nav if in progress, otherwise the last completed one */
   readonly displayTimeline = computed(() => {
     const current = this.currentNavTimeline();
     const last = this.lastNavTimeline();
@@ -84,11 +72,6 @@ export class RouterLifecycleStateService {
   readonly lazyLoadPhases = signal<LazyLoadPhase[]>([]);
   readonly currentUrl = signal<string>('');
   readonly lastNavSummary = signal<NavSummary | null>(null);
-
-  /** Live state for the pipeline stepper */
-  readonly pipelineStatus = signal<RouterPipelineStatus>({
-    start: 'idle', recognized: 'idle', guards: 'idle', resolve: 'idle', end: 'idle',
-  });
 
   private idCounter = 0;
   private navStartPerf = 0;
@@ -126,17 +109,14 @@ export class RouterLifecycleStateService {
       this.currentLazyDuration = null;
       const firstEntry = this.createEntry(0, 'NavigationStart', 'navigation', e.url);
       this.currentNavTimeline.set([firstEntry]);
-      this.pipelineStatus.set({ start: 'done', recognized: 'idle', guards: 'idle', resolve: 'idle', end: 'idle' });
 
     } else if (e instanceof RoutesRecognized) {
       this.addEntry(this.ms(perf), 'RoutesRecognized', 'route-recognized', e.urlAfterRedirects);
-      this.pipelineStatus.update(p => ({ ...p, recognized: 'done' }));
 
     } else if (e instanceof GuardsCheckStart) {
       this.guardStartPerf = perf;
       this.guardStartUrl = e.url;
       this.addEntry(this.ms(perf), 'GuardsCheckStart', 'guard', e.url);
-      this.pipelineStatus.update(p => ({ ...p, guards: 'active' }));
 
     } else if (e instanceof GuardsCheckEnd) {
       const duration = this.guardStartPerf !== null ? this.dur(this.guardStartPerf, perf) : 0;
@@ -147,12 +127,10 @@ export class RouterLifecycleStateService {
           [{ navId: this.currentNavId(), url: this.guardStartUrl, duration }, ...phases].slice(0, 20));
         this.guardStartPerf = null;
       }
-      this.pipelineStatus.update(p => ({ ...p, guards: 'done' }));
 
     } else if (e instanceof ResolveStart) {
       this.resolveStartPerf = perf;
       this.addEntry(this.ms(perf), 'ResolveStart', 'resolver', e.url);
-      this.pipelineStatus.update(p => ({ ...p, resolve: 'active' }));
 
     } else if (e instanceof ResolveEnd) {
       const duration = this.resolveStartPerf !== null ? this.dur(this.resolveStartPerf, perf) : 0;
@@ -163,7 +141,6 @@ export class RouterLifecycleStateService {
           [{ navId: this.currentNavId(), url: e.url, duration }, ...phases].slice(0, 20));
         this.resolveStartPerf = null;
       }
-      this.pipelineStatus.update(p => ({ ...p, resolve: 'done' }));
 
     } else if (e instanceof RouteConfigLoadStart) {
       const route = (e as unknown as { route?: { path?: string } }).route;
@@ -192,12 +169,6 @@ export class RouterLifecycleStateService {
         guardDuration: this.currentGuardDuration, resolverDuration: this.currentResolverDuration,
         lazyDuration: this.currentLazyDuration, outcome: 'complete',
       });
-      this.pipelineStatus.update(p => ({
-        ...p,
-        guards:  p.guards  === 'idle' ? 'skipped' : p.guards,
-        resolve: p.resolve === 'idle' ? 'skipped' : p.resolve,
-        end: 'done',
-      }));
 
     } else if (e instanceof NavigationCancel) {
       const totalDuration = this.dur(this.navStartPerf, perf);
@@ -208,12 +179,6 @@ export class RouterLifecycleStateService {
         guardDuration: this.currentGuardDuration, resolverDuration: this.currentResolverDuration,
         lazyDuration: this.currentLazyDuration, outcome: 'cancelled',
       });
-      this.pipelineStatus.update(p => ({
-        ...p,
-        guards:  p.guards === 'active' ? 'cancelled' : (p.guards === 'idle' ? 'skipped' : p.guards),
-        resolve: p.resolve === 'idle' ? 'skipped' : p.resolve,
-        end: 'cancelled',
-      }));
 
     } else if (e instanceof NavigationError) {
       const totalDuration = this.dur(this.navStartPerf, perf);
@@ -224,12 +189,6 @@ export class RouterLifecycleStateService {
         guardDuration: this.currentGuardDuration, resolverDuration: this.currentResolverDuration,
         lazyDuration: this.currentLazyDuration, outcome: 'error',
       });
-      this.pipelineStatus.update(p => ({
-        ...p,
-        guards:  p.guards  === 'idle' ? 'skipped' : p.guards,
-        resolve: p.resolve === 'idle' ? 'skipped' : p.resolve,
-        end: 'error',
-      }));
     }
   }
 
